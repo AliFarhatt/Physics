@@ -160,6 +160,100 @@ window.MathJax = {
   .nav-btn.primary:hover:not(:disabled) { background: var(--navy-light); border-color: var(--navy-light); }
   #slide-counter { font-size: 0.83rem; color: var(--gray-light); letter-spacing: 0.04em; min-width: 80px; text-align: center; }
   #slide-title-bar { font-size: 0.83rem; color: var(--gray-mid); flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+
+  /* ── Dark mode toggle and theme ── */
+  .theme-toggle {
+    min-width: 104px;
+    justify-content: center;
+  }
+
+  body.dark-mode {
+    --navy: #e7edf8;
+    --navy-light: #c5d4ee;
+    --accent: #8ab4f8;
+    --accent-soft: #1e2b44;
+    --gray-dark: #e8edf7;
+    --gray-mid: #b8c2d6;
+    --gray-light: #94a3b8;
+    --border: #31415f;
+    --bg: #0b1020;
+    --white: #111827;
+    color-scheme: dark;
+  }
+
+  body.dark-mode .slide {
+    background: radial-gradient(circle at top left, rgba(61,107,158,0.16), transparent 38%), var(--bg);
+  }
+
+  body.dark-mode .card,
+  body.dark-mode .formula-box,
+  body.dark-mode .step-item,
+  body.dark-mode .diagram-card,
+  body.dark-mode .quiz-list,
+  body.dark-mode .summary-card,
+  body.dark-mode .dashboard-section,
+  body.dark-mode #nav-bar {
+    box-shadow: 0 14px 38px rgba(0, 0, 0, 0.18);
+  }
+
+  body.dark-mode .def-box,
+  body.dark-mode .nav-btn.primary,
+  body.dark-mode .dash-link.important {
+    background: #172033;
+    border-color: #33466a;
+    color: #e8edf7;
+  }
+
+  body.dark-mode .def-box .def-label { color: #9fc4f5; }
+  body.dark-mode .def-box p { color: #e5edf8; }
+
+  body.dark-mode .dash-link {
+    background: #151f34;
+    color: #e7edf8;
+  }
+
+  body.dark-mode .dash-link:hover,
+  body.dark-mode .nav-btn:hover:not(:disabled) {
+    background: #20304a;
+    border-color: var(--accent);
+  }
+
+  body.dark-mode .nav-btn {
+    background: #111827;
+    color: #e7edf8;
+  }
+
+  body.dark-mode .callout {
+    background: #302812;
+    border-left-color: #f1c75b;
+  }
+
+  body.dark-mode .callout p { color: #f8e8b2; }
+
+  body.dark-mode .MathJax,
+  body.dark-mode mjx-container {
+    color: var(--gray-dark) !important;
+  }
+
+  body.dark-mode svg [fill="#253461"],
+  body.dark-mode svg [fill="#1a2744"] { fill: #c5d4ee; }
+  body.dark-mode svg [stroke="#253461"],
+  body.dark-mode svg [stroke="#1a2744"] { stroke: #c5d4ee; }
+  body.dark-mode svg [fill="#3d6b9e"] { fill: #8ab4f8; }
+  body.dark-mode svg [stroke="#3d6b9e"] { stroke: #8ab4f8; }
+  body.dark-mode svg [fill="#dde8f4"] { fill: #20304a; }
+  body.dark-mode svg [stroke="#dde8f4"] { stroke: #20304a; }
+  body.dark-mode svg [fill="#888"] { fill: #94a3b8; }
+  body.dark-mode svg [stroke="#888"] { stroke: #94a3b8; }
+  body.dark-mode svg [fill="#555"] { fill: #b8c2d6; }
+  body.dark-mode svg [stroke="#555"] { stroke: #b8c2d6; }
+  body.dark-mode svg [fill="#c89a20"] { fill: #f1c75b; }
+  body.dark-mode svg [stroke="#c89a20"] { stroke: #f1c75b; }
+  body.dark-mode svg [fill="#5a4200"] { fill: #f8e8b2; }
+  body.dark-mode svg [stroke="#5a4200"] { stroke: #f8e8b2; }
+  body.dark-mode svg text:not([fill]) { fill: var(--gray-mid); }
+
   @media (max-width: 720px) {
     h1.slide-title { font-size: 1.9rem; }
     h2.slide-title { font-size: 1.45rem; }
@@ -1930,6 +2024,7 @@ window.MathJax = {
   </div>
   <div id="nav-bar">
     <button class="nav-btn" onclick="jumpToTitle('Interactive Dashboard')">Dashboard</button>
+    <button class="nav-btn theme-toggle" id="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Switch to dark mode" aria-pressed="false">🌙 Dark</button>
     <button class="nav-btn" id="btn-prev" onclick="navigate(-1)">← Previous</button>
     <div id="slide-title-bar"></div>
     <div id="slide-counter"></div>
@@ -1956,6 +2051,28 @@ window.MathJax = {
     }
   }
   function navigate(dir) { showSlide(current + dir); }
+
+  const themeToggle = document.getElementById('theme-toggle');
+  function updateThemeButton(mode) {
+    if (!themeToggle) return;
+    const dark = mode === 'dark';
+    themeToggle.textContent = dark ? '☀️ Light' : '🌙 Dark';
+    themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    themeToggle.setAttribute('aria-pressed', String(dark));
+  }
+  function setTheme(mode) {
+    const selectedMode = mode === 'dark' ? 'dark' : 'light';
+    document.body.classList.toggle('dark-mode', selectedMode === 'dark');
+    localStorage.setItem('physicsDeckTheme', selectedMode);
+    updateThemeButton(selectedMode);
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetPromise([slides[current]]).catch(function(){});
+    }
+  }
+  function toggleTheme() {
+    setTheme(document.body.classList.contains('dark-mode') ? 'light' : 'dark');
+  }
+  setTheme(localStorage.getItem('physicsDeckTheme') || 'light');
   function jumpToTitle(title) {
     const idx = slides.findIndex(function(slide) { return slide.dataset.title === title; });
     if (idx >= 0) showSlide(idx);
