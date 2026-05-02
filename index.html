@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>High School Physics - Entrance Exam Presentation</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)'], ['$', '$']],
+    displayMath: [['\\[','\\]'], ['$$','$$']],
+    processEscapes: true
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+  startup: { typeset: true }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1a2744;
+    --navy-light: #253461;
+    --accent: #3d6b9e;
+    --accent-soft: #dde8f4;
+    --gray-dark: #2d2d2d;
+    --gray-mid: #555;
+    --gray-light: #888;
+    --border: #d0d8e4;
+    --bg: #f7f8fc;
+    --white: #ffffff;
+    --slide-max: 960px;
+    --radius: 10px;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--gray-dark);
+    overflow: hidden;
+  }
+
+  #deck { position: fixed; inset: 0; display: flex; flex-direction: column; }
+  #progress-bar { height: 3px; background: var(--accent-soft); flex-shrink: 0; }
+  #progress-fill { height: 100%; background: var(--accent); transition: width 0.3s ease; }
+  #slides-wrap { flex: 1; overflow: hidden; position: relative; }
+  .slide {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    padding: 2rem 2.5rem; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+  }
+  .slide.active { opacity: 1; pointer-events: all; }
+  .slide-inner { width: 100%; max-width: var(--slide-max); display: flex; flex-direction: column; gap: 1.25rem; }
+  .slide-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  h1.slide-title { font-size: 2.6rem; font-weight: 700; color: var(--navy); line-height: 1.15; }
+  h2.slide-title { font-size: 2rem; font-weight: 700; color: var(--navy); line-height: 1.2; }
+  .slide-subtitle { font-size: 1.05rem; color: var(--gray-mid); line-height: 1.6; max-width: 760px; }
+  .rule { border: none; border-top: 1.5px solid var(--border); width: 60px; margin: 0; }
+  .cards { display: grid; gap: 1rem; }
+  .cards.cols-2 { grid-template-columns: 1fr 1fr; }
+  .cards.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.3rem; }
+  .card h3 { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+  .card p, .card li { font-size: 0.95rem; color: var(--gray-dark); line-height: 1.65; }
+  .card ul { padding-left: 1.2rem; }
+  .card.accent { background: var(--accent-soft); border-color: var(--accent); }
+  .card.accent h3 { color: var(--navy-light); }
+  .def-box { background: var(--navy); color: #e8edf7; border-radius: var(--radius); padding: 1.2rem 1.5rem; }
+  .def-box .def-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #8aadce; margin-bottom: 0.5rem; }
+  .def-box p { font-size: 1rem; line-height: 1.7; color: #dce6f3; }
+  .formula-box { background: var(--white); border: 1.5px solid var(--accent); border-radius: var(--radius); padding: 1rem 1.4rem; text-align: center; font-size: 1.05rem; }
+  .formula-box .formula-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+  .bullet-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; }
+  .bullet-list li { position: relative; padding-left: 1rem; font-size: 1rem; line-height: 1.55; color: var(--gray-dark); }
+  .bullet-list li::before { content: ''; position: absolute; left: 0; top: 0.45em; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .step-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.85rem; }
+  .step-item { display: flex; align-items: flex-start; gap: 0.7rem; background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; }
+  .step-num { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 0.1rem; }
+  .step-text { font-size: 0.92rem; line-height: 1.55; color: var(--gray-dark); }
+  .step-text strong { display: block; font-size: 0.82rem; font-weight: 600; color: var(--navy); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.15rem; }
+  .callout { display: flex; gap: 0.8rem; align-items: flex-start; background: #fff8e7; border-left: 3px solid #c89a20; border-radius: 0 6px 6px 0; padding: 0.8rem 1rem; }
+  .callout p { font-size: 0.93rem; line-height: 1.6; color: #5a4200; }
+  .note-box { background: var(--accent-soft); border-radius: 8px; padding: 0.85rem 1.1rem; }
+  .note-box p { font-size: 0.93rem; line-height: 1.6; color: var(--navy-light); }
+  .title-slide .slide-inner { gap: 1.1rem; }
+  .course-tag { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--accent-soft); color: var(--accent); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; padding: 0.35rem 0.85rem; border-radius: 20px; width: fit-content; }
+  .title-meta { font-size: 0.88rem; color: var(--gray-light); display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .diagram-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.6rem 0.9rem; }
+  .diagram-card svg { width: 100%; height: auto; display: block; }
+  .small-diagram svg { max-height: 240px; }
+  .quiz-list { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.4rem 1rem 2.3rem; }
+  .quiz-list li { margin-bottom: 0.55rem; line-height: 1.55; font-size: 0.98rem; }
+  .quiz-list.solutions li { margin-bottom: 0.7rem; }
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.85rem; }
+  .summary-card { background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--accent); border-radius: 8px; padding: 0.9rem 1.1rem; }
+  .summary-card h4 { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--navy); margin-bottom: 0.5rem; }
+  .summary-card ul { padding-left: 1rem; list-style: disc; }
+  .summary-card li { font-size: 0.83rem; line-height: 1.55; color: var(--gray-mid); margin-bottom: 0.2rem; }
+
+  /* ── Interactive dashboard ── */
+  .dashboard-scroll {
+    max-height: calc(100vh - 185px);
+    overflow-y: auto;
+    padding-right: 0.25rem;
+  }
+  .dashboard-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.8rem;
+  }
+  .dashboard-section h3 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 0.55rem;
+  }
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+  .dash-link {
+    border: 1px solid var(--border);
+    background: #f9fbff;
+    color: var(--navy);
+    border-radius: 8px;
+    padding: 0.55rem 0.65rem;
+    text-align: left;
+    font: inherit;
+    font-size: 0.86rem;
+    line-height: 1.25;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  }
+  .dash-link:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+  .dash-link.important {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+  }
+  .dash-link.important:hover {
+    background: var(--navy-light);
+    border-color: var(--navy-light);
+  }
+
+  #nav-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem 2rem; background: var(--white); border-top: 1px solid var(--border); flex-shrink: 0; gap: 1rem; }
+  .nav-btn { display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1.2rem; border: 1px solid var(--border); border-radius: 6px; background: var(--white); color: var(--navy); font-size: 0.88rem; font-weight: 500; cursor: pointer; transition: background 0.15s, border-color 0.15s; font-family: inherit; }
+  .nav-btn:hover:not(:disabled) { background: var(--accent-soft); border-color: var(--accent); }
+  .nav-btn:disabled { opacity: 0.35; cursor: default; }
+  .nav-btn.primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .nav-btn.primary:hover:not(:disabled) { background: var(--navy-light); border-color: var(--navy-light); }
+  #slide-counter { font-size: 0.83rem; color: var(--gray-light); letter-spacing: 0.04em; min-width: 80px; text-align: center; }
+  #slide-title-bar { font-size: 0.83rem; color: var(--gray-mid); flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @media (max-width: 720px) {
+    h1.slide-title { font-size: 1.9rem; }
+    h2.slide-title { font-size: 1.45rem; }
+    .cards.cols-2, .cards.cols-3, .summary-grid, .step-grid, .dashboard-grid { grid-template-columns: 1fr; }
+    .slide { padding: 1rem; overflow-y: auto; align-items: flex-start; }
+    #nav-bar { padding: 0.6rem 1rem; }
+    #slide-title-bar { display: none; }
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+  <div id="progress-bar"><div id="progress-fill"></div></div>
+  <div id="slides-wrap">
+    
+    <section class="slide title-slide" data-title="Title">
+      <div class="slide-inner">
+        <div class="course-tag">High School Physics - Entrance Exam</div>
+        <h1 class="slide-title">Mechanics and Electricity</h1>
+        <hr class="rule" />
+        <p class="slide-subtitle">A detailed classroom deck covering kinematics, dynamics, current, voltage, resistance, electrical energy, and power.</p>
+        <div class="title-meta">
+          <span></span>
+          <span>·</span>
+          <span>Use ← → arrow keys or the buttons below</span>
+        </div>
+        <div class="step-grid" style="margin-top:0.4rem">
+          <button class="nav-btn primary" onclick="jumpToTitle('Interactive Dashboard')" style="width:max-content">Open Interactive Dashboard →</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Interactive Dashboard">
+      <div class="slide-inner">
+        <span class="slide-label">Interactive Navigation</span>
+        <h2 class="slide-title">Physics Dashboard</h2>
+        <p class="slide-subtitle">Jump directly to any idea, example, quiz, summary, or final test. Use this as your study map.</p>
+        <div class="dashboard-scroll">
+          <div class="dashboard-section">
+            <h3>Start Here</h3>
+            <div class="dashboard-grid">
+              <button class="dash-link" onclick="jumpToTitle('Physics Quantities and Units')">Quantities and units</button>
+              <button class="dash-link" onclick="jumpToTitle('Pre-Test Checklist')">Pre-test checklist</button>
+            </div>
+          </div>
+
+          <div class="dashboard-section">
+            <h3>Topic 1 - Kinematics: Describing Motion</h3>
+            <div class="dashboard-grid">
+              <button class="dash-link important" onclick="jumpToTitle('Topic 1 - Kinematics')">Topic intro</button>
+              <button class="dash-link" onclick="jumpToTitle('Distance and Displacement')">Distance vs displacement</button>
+              <button class="dash-link" onclick="jumpToTitle('Worked Example - Distance vs Displacement')">Example: distance/displacement</button>
+              <button class="dash-link" onclick="jumpToTitle('Speed and Velocity')">Speed vs velocity</button>
+              <button class="dash-link" onclick="jumpToTitle('Worked Example - Speed and Velocity')">Example: speed/velocity</button>
+              <button class="dash-link" onclick="jumpToTitle('Determining Speed from Data')">Determine speed</button>
+              <button class="dash-link" onclick="jumpToTitle('Acceleration')">Acceleration</button>
+              <button class="dash-link" onclick="jumpToTitle('Determining Velocity from Acceleration')">Determine velocity</button>
+              <button class="dash-link" onclick="jumpToTitle('Displacement-Time Graphs')">x-t graph slope</button>
+              <button class="dash-link" onclick="jumpToTitle('Graph Shapes and Motion')">Graph shapes</button>
+              <button class="dash-link" onclick="jumpToTitle('Piecewise x-t Graphs')">Piecewise graphs</button>
+              <button class="dash-link important" onclick="jumpToTitle('Kinematics Mini Quiz')">Mini quiz</button>
+            </div>
+          </div>
+
+          <div class="dashboard-section">
+            <h3>Topic 1 - Dynamics: Forces</h3>
+            <div class="dashboard-grid">
+              <button class="dash-link important" onclick="jumpToTitle('Topic 1 - Dynamics')">Topic intro</button>
+              <button class="dash-link" onclick="jumpToTitle('What Is a Force?')">What is a force?</button>
+              <button class="dash-link" onclick="jumpToTitle('Representing Forces Graphically')">Represent forces graphically</button>
+              <button class="dash-link" onclick="jumpToTitle('Free-Body Diagrams')">Free-body diagrams</button>
+              <button class="dash-link" onclick="jumpToTitle('Adding Forces Along the Same Line')">Same-line forces</button>
+              <button class="dash-link" onclick="jumpToTitle('Adding Perpendicular Forces')">Perpendicular forces</button>
+              <button class="dash-link" onclick="jumpToTitle('Direction of Perpendicular Resultant')">Resultant direction</button>
+              <button class="dash-link" onclick="jumpToTitle('Newton’s Second Law')">Newton’s second law</button>
+              <button class="dash-link" onclick="jumpToTitle('Using Newton’s Second Law')">Use F = ma</button>
+              <button class="dash-link" onclick="jumpToTitle('Scale Drawings for Forces')">Scale drawings</button>
+              <button class="dash-link" onclick="jumpToTitle('Worked Example - Combined Forces and Acceleration')">Example: net force and acceleration</button>
+              <button class="dash-link important" onclick="jumpToTitle('Dynamics Mini Quiz')">Mini quiz</button>
+            </div>
+          </div>
+
+          <div class="dashboard-section">
+            <h3>Topic 2 - Electricity: Current and Voltage</h3>
+            <div class="dashboard-grid">
+              <button class="dash-link important" onclick="jumpToTitle('Topic 2 - Electricity')">Topic intro</button>
+              <button class="dash-link" onclick="jumpToTitle('Electric Current')">Electric current</button>
+              <button class="dash-link" onclick="jumpToTitle('Current Direction and Circuit Requirement')">Circuit requirement</button>
+              <button class="dash-link" onclick="jumpToTitle('Voltage')">Voltage</button>
+              <button class="dash-link" onclick="jumpToTitle('Meaning of Voltage')">Meaning of voltage</button>
+              <button class="dash-link" onclick="jumpToTitle('Laws of Current in Simple Circuits')">Current laws</button>
+              <button class="dash-link" onclick="jumpToTitle('Laws of Voltage in Simple Circuits')">Voltage laws</button>
+              <button class="dash-link" onclick="jumpToTitle('Measuring Current and Voltage')">Ammeter and voltmeter</button>
+              <button class="dash-link" onclick="jumpToTitle('Worked Example - Circuit Laws')">Example: circuit laws</button>
+              <button class="dash-link important" onclick="jumpToTitle('Electricity Mini Quiz')">Mini quiz</button>
+            </div>
+          </div>
+
+          <div class="dashboard-section">
+            <h3>Topic 2 - Resistance</h3>
+            <div class="dashboard-grid">
+              <button class="dash-link important" onclick="jumpToTitle('Resistance Topic')">Topic intro</button>
+              <button class="dash-link" onclick="jumpToTitle('Electrical Resistance')">Electrical resistance</button>
+              <button class="dash-link" onclick="jumpToTitle('Resistance Intuition')">Resistance intuition</button>
+              <button class="dash-link" onclick="jumpToTitle('Ohm’s Law')">Ohm’s law</button>
+              <button class="dash-link" onclick="jumpToTitle('Ohmic Resistor Graph')">Ohmic resistor graph</button>
+              <button class="dash-link" onclick="jumpToTitle('Resistors in Series')">Series resistors</button>
+              <button class="dash-link" onclick="jumpToTitle('Resistors in Parallel')">Parallel resistors</button>
+              <button class="dash-link" onclick="jumpToTitle('Mixed Resistor Circuits')">Mixed circuits</button>
+              <button class="dash-link" onclick="jumpToTitle('Series vs Parallel Strategy Table')">Series vs parallel strategy</button>
+              <button class="dash-link important" onclick="jumpToTitle('Resistance Mini Quiz')">Mini quiz</button>
+            </div>
+          </div>
+
+          <div class="dashboard-section">
+            <h3>Topic 2 - Energy and Power</h3>
+            <div class="dashboard-grid">
+              <button class="dash-link important" onclick="jumpToTitle('Energy and Power Topic')">Topic intro</button>
+              <button class="dash-link" onclick="jumpToTitle('Electrical Power')">Electrical power</button>
+              <button class="dash-link" onclick="jumpToTitle('Other Power Formulas')">Power formulas</button>
+              <button class="dash-link" onclick="jumpToTitle('Electrical Energy')">Electrical energy</button>
+              <button class="dash-link" onclick="jumpToTitle('Energy Formula Variations')">Energy formulas</button>
+              <button class="dash-link" onclick="jumpToTitle('Power vs Energy')">Power vs energy</button>
+              <button class="dash-link" onclick="jumpToTitle('Energy Units: J and kWh')">J and kWh</button>
+              <button class="dash-link" onclick="jumpToTitle('Worked Example - Circuit Power')">Example: circuit power</button>
+              <button class="dash-link important" onclick="jumpToTitle('Energy and Power Mini Quiz')">Mini quiz</button>
+            </div>
+          </div>
+
+          <div class="dashboard-section">
+            <h3>Review and Final Test</h3>
+            <div class="dashboard-grid">
+              <button class="dash-link" onclick="jumpToTitle('Formula Summary - Mechanics')">Mechanics formulas</button>
+              <button class="dash-link" onclick="jumpToTitle('Formula Summary - Electricity')">Electricity formulas</button>
+              <button class="dash-link" onclick="jumpToTitle('Common Mistakes')">Common mistakes</button>
+              <button class="dash-link important" onclick="jumpToTitle('Final Test Instructions')">Final test</button>
+              <button class="dash-link" onclick="jumpToTitle('Final Test Solutions - Q1')">Final test solutions</button>
+              <button class="dash-link" onclick="jumpToTitle('Closing Checklist')">Closing checklist</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide " data-title="Physics Quantities and Units">
+      <div class="slide-inner">
+        <span class="slide-label">Foundation</span>
+        <h2 class="slide-title">Physical Quantities and Units</h2>
+        
+<div class="def-box"><div class="def-label">Key idea</div><p>A physical quantity is a measurable property. A number without a unit is usually incomplete in physics.</p></div>
+<div class="cards cols-2">
+  <div class="card"><h3>Examples</h3><ul class="bullet-list"><li>Distance: measured in meters, m.</li><li>Time: measured in seconds, s.</li><li>Mass: measured in kilograms, kg.</li><li>Force: measured in newtons, N.</li></ul></div>
+  <div class="card accent"><h3>Important habit</h3><p>Before solving, convert all quantities to SI units unless the question clearly allows another unit.</p><br/><p>
+  Examples: \(1\,\text{km}=1000\,\text{m}\), \(1\,\text{h}=3600\,\text{s}\), \(1\,\text{mA}=10^{-3}\,\text{A}\).</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Topic 1 - Kinematics">
+      <div class="slide-inner">
+        <span class="slide-label">Topic 1 - Mechanics</span>
+        <h2 class="slide-title">Kinematics: Describing Motion</h2>
+        
+<p class="slide-subtitle">Kinematics describes motion without asking what caused the motion. We study position, displacement, distance, speed, velocity, and acceleration.</p>
+<div class="cards cols-2">
+  <div class="card accent"><h3>Main question</h3><p>Where is the object, how fast is it moving, and how is its motion changing?</p></div>
+  <div class="card"><h3>Core tools</h3><ul class="bullet-list"><li>Formulas with time</li><li>Displacement-time graphs</li><li>Careful distinction between scalar and vector quantities</li></ul></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Distance and Displacement">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Idea 1</span>
+        <h2 class="slide-title">Distance and Displacement</h2>
+        
+<div class="cards cols-2">
+  <div class="card"><h3>Distance</h3><p>The total length of the path traveled. It is a <strong>scalar</strong>: it has magnitude only.</p><br/><p>Distance can never be negative.</p></div>
+  <div class="card accent"><h3>Displacement</h3><p>The straight-line change in position from start to finish. It is a <strong>vector</strong>: it has magnitude and direction.</p><br/><p>Displacement can be positive, negative, or zero depending on direction.</p></div>
+</div>
+<div class="diagram-card">
+<svg viewBox="0 0 760 170" role="img" aria-label="Distance and displacement diagram">
+  <defs><marker id="arrow1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#3d6b9e"/></marker></defs>
+  <circle cx="90" cy="105" r="10" fill="#253461"/><text x="68" y="140">Start</text>
+  <circle cx="670" cy="65" r="10" fill="#253461"/><text x="650" y="40">Finish</text>
+  <path d="M90 105 C170 30, 260 145, 350 80 S520 25, 670 65" fill="none" stroke="#888" stroke-width="6" stroke-linecap="round"/>
+  <line x1="90" y1="105" x2="670" y2="65" stroke="#3d6b9e" stroke-width="4" marker-end="url(#arrow1)"/>
+  <text x="330" y="35" fill="#3d6b9e" font-weight="700">displacement</text>
+  <text x="330" y="145" fill="#555">actual path = distance</text>
+</svg>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Distance vs Displacement">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Distance vs Displacement</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A student walks 40 m east, then 15 m west. Find the total distance and the displacement.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Total distance</strong>Distance counts the whole path: \(40+15=55\,\text{m}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Choose direction</strong>Take east as positive, west as negative.</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Displacement</strong>\(\Delta x=+40-15=+25\,\text{m}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Conclusion</strong>Distance = \(55\,\text{m}\). Displacement = \(25\,\text{m east}\).</div></div>
+</div>
+<div class="callout"><p><strong>Common mistake:</strong> Do not subtract for distance. Distance ignores direction; displacement uses direction.</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Speed and Velocity">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Idea 2</span>
+        <h2 class="slide-title">Speed and Velocity</h2>
+        
+<div class="def-box"><div class="def-label">Big distinction</div><p>Speed tells how fast an object moves. Velocity tells how fast and in which direction its position changes.</p></div>
+<div class="cards cols-2">
+  <div class="formula-box"><div class="formula-label">Average speed</div>\[v_{\text{speed}}=\frac{\text{total distance}}{\text{total time}}\]</div>
+  <div class="formula-box"><div class="formula-label">Average velocity</div>\[\vec v_{\text{avg}}=\frac{\text{displacement}}{\text{total time}}=\frac{\Delta x}{\Delta t}\]</div>
+</div>
+<div class="cards cols-2">
+  <div class="card"><h3>Speed</h3><p>Scalar. It is always non-negative.</p></div>
+  <div class="card accent"><h3>Velocity</h3><p>Vector. Its sign or direction matters.</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Speed and Velocity">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Speed vs Velocity</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A runner completes one full lap of a circular track of length 400 m in 80 s and ends where they started. Find average speed and average velocity.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Distance</strong>Total distance is one full lap: \(400\,\text{m}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Displacement</strong>Start and finish are the same, so displacement is \(0\,\text{m}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Average speed</strong>\(v=\frac{400}{80}=5\,\text{m/s}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Average velocity</strong>\(\vec v=\frac{0}{80}=0\,\text{m/s}\).</div></div>
+</div>
+<div class="note-box"><p>This example proves speed and velocity are not the same thing.</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Determining Speed from Data">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Idea 3</span>
+        <h2 class="slide-title">Determining Speed from Distance and Time</h2>
+        
+<p class="slide-subtitle">When the motion is described by total distance and total time, use average speed.</p>
+<div class="formula-box"><div class="formula-label">Average speed</div>\[v=\frac{d}{t}\]</div>
+<div class="cards cols-3">
+  <div class="card"><h3>Find speed</h3><p>\(v=\frac{d}{t}\)</p></div>
+  <div class="card"><h3>Find distance</h3><p>\(d=vt\)</p></div>
+  <div class="card accent"><h3>Find time</h3><p>\(t=\frac{d}{v}\)</p></div>
+</div>
+<div class="callout"><p><strong>Unit check:</strong> If distance is in meters and time is in seconds, speed is in m/s.</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Determining Speed">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Determining Average Speed</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A cyclist travels 1.8 km in 6 min. Find the average speed in m/s.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Convert distance</strong>\(1.8\,\text{km}=1800\,\text{m}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Convert time</strong>\(6\,\text{min}=360\,\text{s}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Apply formula</strong>\(v=\frac{d}{t}=\frac{1800}{360}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(v=5\,\text{m/s}\).</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Acceleration">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Idea 4</span>
+        <h2 class="slide-title">Acceleration</h2>
+        
+<div class="def-box"><div class="def-label">Definition</div><p>Acceleration is the rate of change of velocity with time. It tells how quickly velocity changes.</p></div>
+<div class="formula-box"><div class="formula-label">Average acceleration</div>\[a=\frac{\Delta v}{\Delta t}=\frac{v_f-v_i}{t}\]</div>
+<div class="cards cols-3">
+  <div class="card accent"><h3>Positive acceleration</h3><p>Velocity becomes more positive with time.</p></div>
+  <div class="card"><h3>Negative acceleration</h3><p>Velocity becomes less positive, or more negative, with time.</p></div>
+  <div class="card"><h3>Zero acceleration</h3><p>Velocity is constant.</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Understanding Acceleration Direction">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Idea 4</span>
+        <h2 class="slide-title">Acceleration Is Not Always “Speeding Up”</h2>
+        
+<p class="slide-subtitle">A very common mistake is thinking acceleration always means an object is getting faster. In physics, acceleration means velocity is changing.</p>
+<div class="cards cols-2">
+  <div class="card"><h3>Speeding up</h3><p>If velocity and acceleration have the same direction, the speed increases.</p><br/><p>Example: moving east with acceleration east.</p></div>
+  <div class="card accent"><h3>Slowing down</h3><p>If velocity and acceleration have opposite directions, the speed decreases.</p><br/><p>Example: moving east with acceleration west.</p></div>
+</div>
+<div class="diagram-card small-diagram">
+<svg viewBox="0 0 760 160">
+ <defs><marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#3d6b9e"/></marker><marker id="arrow3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#c89a20"/></marker></defs>
+ <text x="55" y="35" font-weight="700" fill="#253461">Speeding up</text>
+ <line x1="70" y1="70" x2="230" y2="70" stroke="#3d6b9e" stroke-width="5" marker-end="url(#arrow2)"/><text x="120" y="100">velocity</text>
+ <line x1="70" y1="120" x2="180" y2="120" stroke="#c89a20" stroke-width="5" marker-end="url(#arrow3)"/><text x="110" y="150">acceleration</text>
+ <text x="435" y="35" font-weight="700" fill="#253461">Slowing down</text>
+ <line x1="450" y1="70" x2="610" y2="70" stroke="#3d6b9e" stroke-width="5" marker-end="url(#arrow2)"/><text x="500" y="100">velocity</text>
+ <line x1="610" y1="120" x2="500" y2="120" stroke="#c89a20" stroke-width="5" marker-end="url(#arrow3)"/><text x="500" y="150">acceleration</text>
+</svg>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Acceleration">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Acceleration</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A car increases its velocity from 6 m/s to 22 m/s in 8 s. Find its acceleration.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Known values</strong>\(v_i=6\,\text{m/s}\), \(v_f=22\,\text{m/s}\), \(t=8\,\text{s}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Formula</strong>\(a=\frac{v_f-v_i}{t}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Substitute</strong>\(a=\frac{22-6}{8}=\frac{16}{8}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(a=2\,\text{m/s}^2\).</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Determining Velocity from Acceleration">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Idea 5</span>
+        <h2 class="slide-title">Determining Final Velocity</h2>
+        
+<p class="slide-subtitle">If acceleration is constant, the acceleration formula can be rearranged to find final velocity.</p>
+<div class="formula-box"><div class="formula-label">From acceleration</div>\[a=\frac{v_f-v_i}{t}\quad \Rightarrow \quad v_f=v_i+at\]</div>
+<div class="cards cols-2">
+  <div class="card"><h3>Use this when</h3><p>You know initial velocity, acceleration, and time.</p></div>
+  <div class="card accent"><h3>Meaning</h3><p>The change in velocity is \(at\). So final velocity equals initial velocity plus the change.</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Final Velocity">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Determining Final Velocity</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A cart starts at \(3\,\text{m/s}\) and accelerates at \(1.5\,\text{m/s}^2\) for \(6\,\text{s}\). Find its final velocity.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Known values</strong>\(v_i=3\,\text{m/s}\), \(a=1.5\,\text{m/s}^2\), \(t=6\,\text{s}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Formula</strong>\(v_f=v_i+at\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Substitute</strong>\(v_f=3+(1.5)(6)\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(v_f=12\,\text{m/s}\).</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Displacement-Time Graphs">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Idea 6</span>
+        <h2 class="slide-title">Displacement-Time Graphs</h2>
+        
+<div class="def-box"><div class="def-label">Main idea</div><p>On a displacement-time graph, the slope gives velocity.</p></div>
+<div class="formula-box"><div class="formula-label">Slope of x-t graph</div>\[\text{slope}=\frac{\Delta x}{\Delta t}=v\]</div>
+<div class="diagram-card">
+<svg viewBox="0 0 760 260">
+  <defs><marker id="arrowAxis" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#253461"/></marker></defs>
+  <line x1="80" y1="210" x2="700" y2="210" stroke="#253461" stroke-width="3" marker-end="url(#arrowAxis)"/>
+  <line x1="80" y1="210" x2="80" y2="35" stroke="#253461" stroke-width="3" marker-end="url(#arrowAxis)"/>
+  <text x="690" y="238">time</text><text x="35" y="25">displacement</text>
+  <line x1="120" y1="180" x2="640" y2="70" stroke="#3d6b9e" stroke-width="5"/>
+  <line x1="280" y1="146" x2="520" y2="146" stroke="#c89a20" stroke-width="3" stroke-dasharray="7 6"/>
+  <line x1="520" y1="146" x2="520" y2="95" stroke="#c89a20" stroke-width="3" stroke-dasharray="7 6"/>
+  <text x="365" y="166" fill="#5a4200">Δt</text><text x="535" y="120" fill="#5a4200">Δx</text>
+  <text x="420" y="65" fill="#3d6b9e" font-weight="700">positive slope → positive velocity</text>
+</svg>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Graph Shapes and Motion">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Idea 6</span>
+        <h2 class="slide-title">What the Shape of an x-t Graph Means</h2>
+        
+<div class="cards cols-3">
+  <div class="card accent"><h3>Horizontal line</h3><p>Displacement is constant, so velocity is zero. The object is at rest.</p></div>
+  <div class="card"><h3>Straight sloped line</h3><p>Slope is constant, so velocity is constant.</p></div>
+  <div class="card"><h3>Steeper line</h3><p>A greater slope means greater speed.</p></div>
+</div>
+<div class="cards cols-2">
+  <div class="card"><h3>Positive slope</h3><p>Velocity is positive: motion in the positive direction.</p></div>
+  <div class="card"><h3>Negative slope</h3><p>Velocity is negative: motion in the opposite direction.</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - x-t Graph">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Velocity from a Graph</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A displacement-time graph is a straight line passing through \((t,x)=(2\,\text{s},4\,\text{m})\) and \((8\,\text{s},22\,\text{m})\). Find the velocity.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Use slope</strong>Velocity is the slope of the displacement-time graph.</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Calculate changes</strong>\(\Delta x=22-4=18\,\text{m}\), \(\Delta t=8-2=6\,\text{s}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Divide</strong>\(v=\frac{\Delta x}{\Delta t}=\frac{18}{6}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(v=3\,\text{m/s}\).</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Kinematics Mini Quiz">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Mini Quiz</span>
+        <h2 class="slide-title">Mini Quiz 1: Kinematics</h2>
+        
+<div class="card accent"><h3>Instructions</h3><p>Solve without looking at the answers. Show formulas and units.</p></div>
+<ol class="quiz-list">
+  <li>A student walks 25 m north, then 10 m south. Find distance and displacement.</li>
+  <li>A car travels 540 m in 45 s. Find average speed.</li>
+  <li>A train changes velocity from 12 m/s to 30 m/s in 9 s. Find acceleration.</li>
+  <li>A cyclist starts at 4 m/s and accelerates at 0.8 m/s² for 10 s. Find final velocity.</li>
+  <li>On an x-t graph, two points are \((3\,\text{s}, 12\,\text{m})\) and \((7\,\text{s}, 0\,\text{m})\). Find the velocity and explain the sign.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Kinematics Mini Quiz Solutions">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Solutions</span>
+        <h2 class="slide-title">Mini Quiz 1: Solutions</h2>
+        
+<ol class="quiz-list solutions">
+  <li>Distance \(=25+10=35\,\text{m}\). Displacement \(=25-10=15\,\text{m north}\).</li>
+  <li>\(v=\frac{540}{45}=12\,\text{m/s}\).</li>
+  <li>\(a=\frac{30-12}{9}=2\,\text{m/s}^2\).</li>
+  <li>\(v_f=v_i+at=4+(0.8)(10)=12\,\text{m/s}\).</li>
+  <li>\(v=\frac{0-12}{7-3}=\frac{-12}{4}=-3\,\text{m/s}\). The negative sign means motion is in the negative direction.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Topic 1 - Dynamics">
+      <div class="slide-inner">
+        <span class="slide-label">Topic 1 - Mechanics</span>
+        <h2 class="slide-title">Dynamics: Forces and Newton’s Second Law</h2>
+        
+<p class="slide-subtitle">Dynamics asks why motion changes. The answer is usually force: pushes, pulls, weight, tension, normal force, and other interactions.</p>
+<div class="cards cols-2">
+  <div class="card accent"><h3>Central idea</h3><p>Forces are vectors. To find the effect on motion, first find the net force.</p></div>
+  <div class="card"><h3>Main equation</h3><p>\(\sum \vec F = m\vec a\)</p><br/><p>Net force causes acceleration.</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="What Is a Force?">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Idea 1</span>
+        <h2 class="slide-title">What Is a Force?</h2>
+        
+<div class="def-box"><div class="def-label">Definition</div><p>A force is a push or pull that can change the motion or shape of an object.</p></div>
+<div class="cards cols-3">
+  <div class="card"><h3>Vector quantity</h3><p>A force has magnitude and direction.</p></div>
+  <div class="card accent"><h3>Unit</h3><p>The SI unit of force is the newton, written \(\text{N}\).</p></div>
+  <div class="card"><h3>Effect</h3><p>An unbalanced force produces acceleration.</p></div>
+</div>
+<div class="formula-box"><div class="formula-label">Unit relation</div>\[1\,\text{N}=1\,\text{kg}\cdot\text{m/s}^2\]</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Representing Forces Graphically">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Idea 2</span>
+        <h2 class="slide-title">Representing Forces Graphically</h2>
+        
+<p class="slide-subtitle">Forces are represented by arrows. The arrow gives both magnitude and direction.</p>
+<div class="cards cols-2">
+  <div class="card"><h3>Length</h3><p>The longer the arrow, the larger the force.</p></div>
+  <div class="card accent"><h3>Direction</h3><p>The arrow points in the direction of the force.</p></div>
+</div>
+<div class="diagram-card">
+<svg viewBox="0 0 760 210">  <defs>    <!-- Blue arrowhead for the larger force -->    <marker id="forceArrowBlue" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">      <path d="M0,0 L10,4 L0,8 Z" fill="#3d6b9e"/>    </marker>    <!-- Gray arrowhead for the smaller force -->    <marker id="forceArrowGray" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">      <path d="M0,0 L10,4 L0,8 Z" fill="#888"/>    </marker>  </defs>  <!-- Box -->  <rect     x="320"     y="85"     width="120"     height="60"     rx="8"     fill="#dde8f4"     stroke="#253461"     stroke-width="3"  />  <text     x="380"     y="122"     text-anchor="middle"     font-weight="700"     fill="#253461"     font-size="18"  >    Box  </text>  <!-- Larger force to the right: starts from the middle of the right side of the box -->  <line     x1="440"     y1="115"     x2="650"     y2="115"     stroke="#3d6b9e"     stroke-width="6"     marker-end="url(#forceArrowBlue)"  />  <text     x="545"     y="95"     text-anchor="middle"     fill="#3d6b9e"     font-weight="700"     font-size="18"  >    F = 20 N  </text>  <!-- Smaller force to the left: starts from the middle of the left side of the box -->  <line     x1="320"     y1="115"     x2="220"     y2="115"     stroke="#888"     stroke-width="4"     marker-end="url(#forceArrowGray)"  />  <text     x="270"     y="95"     text-anchor="middle"     fill="#555"     font-weight="700"     font-size="16"  >    F = 5 N  </text>  <text     x="270"     y="140"     text-anchor="middle"     fill="#555"     font-size="14"  >    smaller force  </text></svg>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Free-Body Diagrams">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Idea 2</span>
+        <h2 class="slide-title">Free-Body Diagrams</h2>
+        
+<div class="def-box"><div class="def-label">Definition</div><p>A free-body diagram is a simplified drawing showing only the object and the forces acting on it.</p></div>
+<div class="diagram-card">
+<svg viewBox="0 0 760 260">
+  <defs><marker id="fbdArrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#3d6b9e"/></marker></defs>
+  <circle cx="380" cy="130" r="34" fill="#dde8f4" stroke="#253461" stroke-width="3"/>
+  <text x="371" y="136" fill="#253461" font-weight="700">m</text>
+  <line x1="380" y1="96" x2="380" y2="35" stroke="#3d6b9e" stroke-width="5" marker-end="url(#fbdArrow)"/><text x="394" y="58">normal force \(N\)</text>
+  <line x1="380" y1="164" x2="380" y2="225" stroke="#3d6b9e" stroke-width="5" marker-end="url(#fbdArrow)"/><text x="394" y="210">weight \(W=mg\)</text>
+  <line x1="414" y1="130" x2="520" y2="130" stroke="#c89a20" stroke-width="5" marker-end="url(#fbdArrow)"/><text x="500" y="118" fill="#5a4200">applied force</text>
+</svg>
+</div>
+<div class="callout"><p><strong>Rule:</strong> Do not draw forces that the object exerts on other objects. Draw only forces acting on the object.</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Force Diagram">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Reading a Force Diagram</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A 5 kg box is pushed to the right by 30 N and pulled to the left by 10 N. Represent the forces and find the net horizontal force.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Choose positive direction</strong>Let right be positive.</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Write forces with signs</strong>Right force: \(+30\,\text{N}\). Left force: \(-10\,\text{N}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Add forces</strong>\(F_{\text{net}}=30-10=20\,\text{N}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Direction</strong>The net force is \(20\,\text{N}\) to the right.</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Adding Forces Along the Same Line">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Idea 3</span>
+        <h2 class="slide-title">Adding Two Force Vectors Along One Line</h2>
+        
+<div class="cards cols-2">
+  <div class="card accent"><h3>Same direction</h3><p>Add magnitudes: \(F_R=F_1+F_2\).</p></div>
+  <div class="card"><h3>Opposite directions</h3><p>Subtract magnitudes: \(F_R=|F_1-F_2|\), direction of the larger force.</p></div>
+</div>
+<div class="diagram-card small-diagram">
+<svg viewBox="0 0 760 180">
+  <defs><marker id="linArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#3d6b9e"/></marker></defs>
+  <text x="60" y="35" font-weight="700" fill="#253461">Same direction</text>
+  <line x1="80" y1="70" x2="210" y2="70" stroke="#3d6b9e" stroke-width="5" marker-end="url(#linArrow)"/><text x="120" y="60">12 N</text>
+  <line x1="220" y1="70" x2="320" y2="70" stroke="#3d6b9e" stroke-width="5" marker-end="url(#linArrow)"/><text x="245" y="60">8 N</text>
+  <text x="140" y="120">resultant = 20 N right</text>
+  <text x="450" y="35" font-weight="700" fill="#253461">Opposite directions</text>
+  <line x1="520" y1="75" x2="650" y2="75" stroke="#3d6b9e" stroke-width="5" marker-end="url(#linArrow)"/><text x="560" y="60">15 N</text>
+  <line x1="520" y1="105" x2="420" y2="105" stroke="#888" stroke-width="5" marker-end="url(#linArrow)"/><text x="445" y="130">6 N</text>
+  <text x="485" y="160">resultant = 9 N right</text>
+</svg>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Same Line Forces">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Same-Line Resultant Force</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>Two forces act on a cart: \(18\,\text{N}\) east and \(27\,\text{N}\) west. Find the resultant force.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Opposite directions</strong>Subtract the smaller from the larger.</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Magnitude</strong>\(F_R=27-18=9\,\text{N}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Direction</strong>The larger force is west.</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>Resultant force = \(9\,\text{N west}\).</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Adding Perpendicular Forces">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Idea 4</span>
+        <h2 class="slide-title">Adding Two Forces at Right Angle</h2>
+        
+<p class="slide-subtitle">When two forces act at right angles, the resultant is the diagonal of a right triangle.</p>
+<div class="formula-box"><div class="formula-label">Magnitude of resultant</div>\[F_R=\sqrt{F_1^2+F_2^2}\]</div>
+<div class="diagram-card">
+<svg viewBox="0 0 760 260">
+  <defs><marker id="perpArrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#3d6b9e"/></marker><marker id="resArrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#c89a20"/></marker></defs>
+  <line x1="170" y1="200" x2="520" y2="200" stroke="#3d6b9e" stroke-width="6" marker-end="url(#perpArrow)"/>
+  <line x1="170" y1="200" x2="170" y2="70" stroke="#3d6b9e" stroke-width="6" marker-end="url(#perpArrow)"/>
+  <line x1="170" y1="200" x2="520" y2="70" stroke="#c89a20" stroke-width="6" marker-end="url(#resArrow)"/>
+  <line x1="520" y1="200" x2="520" y2="70" stroke="#888" stroke-width="2" stroke-dasharray="6 6"/>
+  <line x1="170" y1="70" x2="520" y2="70" stroke="#888" stroke-width="2" stroke-dasharray="6 6"/>
+  <text x="330" y="225">\(F_1\)</text><text x="120" y="135">\(F_2\)</text><text x="360" y="125" fill="#5a4200" font-weight="700">\(F_R\)</text>
+</svg>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Direction of Perpendicular Resultant">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Idea 4</span>
+        <h2 class="slide-title">Finding the Direction of the Resultant</h2>
+        
+<p class="slide-subtitle">For perpendicular forces, the angle can be found using trigonometry.</p>
+<div class="formula-box"><div class="formula-label">Angle with horizontal force</div>\[\tan\theta=\frac{F_{\text{vertical}}}{F_{\text{horizontal}}}\]</div>
+<div class="cards cols-2">
+  <div class="card"><h3>Magnitude tells “how strong”</h3><p>Use Pythagoras: \(F_R=\sqrt{F_x^2+F_y^2}\).</p></div>
+  <div class="card accent"><h3>Angle tells “which direction”</h3><p>Use tangent: \(\theta=\tan^{-1}\!\left(\frac{F_y}{F_x}\right)\).</p></div>
+</div>
+<div class="callout"><p><strong>Calculator note:</strong> Make sure your calculator is in degree mode when the answer is expected in degrees.</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Perpendicular Forces">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Right-Angle Force Addition</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A box is pulled by \(24\,\text{N}\) east and \(10\,\text{N}\) north. Find the resultant force and its direction.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Magnitude</strong>\(F_R=\sqrt{24^2+10^2}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Calculate</strong>\(F_R=\sqrt{576+100}=\sqrt{676}=26\,\text{N}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Angle</strong>\(\tan\theta=\frac{10}{24}\), so \(\theta\approx22.6^\circ\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(26\,\text{N}\), \(22.6^\circ\) north of east.</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Newton’s Second Law">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Idea 5</span>
+        <h2 class="slide-title">Newton’s Second Law of Motion</h2>
+        
+<div class="def-box"><div class="def-label">Law</div><p>The acceleration of a body is directly proportional to the net force acting on it and inversely proportional to its mass.</p></div>
+<div class="formula-box"><div class="formula-label">Newton’s second law</div>\[\sum \vec F = m\vec a\]</div>
+<div class="cards cols-3">
+  <div class="card"><h3>\(\sum F\)</h3><p>Net force, in newtons.</p></div>
+  <div class="card"><h3>\(m\)</h3><p>Mass, in kilograms.</p></div>
+  <div class="card accent"><h3>\(a\)</h3><p>Acceleration, in \(\text{m/s}^2\).</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Using Newton’s Second Law">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Idea 5</span>
+        <h2 class="slide-title">Solving for Acceleration</h2>
+        
+<p class="slide-subtitle">Most entrance questions ask you to find acceleration from mass and net force.</p>
+<div class="formula-box"><div class="formula-label">Acceleration form</div>\[a=\frac{\sum F}{m}\]</div>
+<div class="cards cols-2">
+  <div class="card"><h3>More net force</h3><p>For the same mass, more net force means greater acceleration.</p></div>
+  <div class="card accent"><h3>More mass</h3><p>For the same net force, more mass means smaller acceleration.</p></div>
+</div>
+<div class="callout"><p><strong>Important:</strong> Use net force, not just one force, unless the problem says it is the only force acting in that direction.</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Newton’s Second Law">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Acceleration from Net Force</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A \(6\,\text{kg}\) object has a net force of \(18\,\text{N}\) acting to the right. Find its acceleration.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Known values</strong>\(m=6\,\text{kg}\), \(F_{\text{net}}=18\,\text{N}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Formula</strong>\(a=\frac{F_{\text{net}}}{m}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Substitute</strong>\(a=\frac{18}{6}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(a=3\,\text{m/s}^2\) to the right.</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Combined Forces and Acceleration">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Forces First, Then Acceleration</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A \(4\,\text{kg}\) cart is pushed by \(35\,\text{N}\) to the right and \(11\,\text{N}\) to the left. Find its acceleration.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Find net force</strong>\(F_{\text{net}}=35-11=24\,\text{N}\) right.</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Use Newton’s law</strong>\(a=\frac{F_{\text{net}}}{m}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Substitute</strong>\(a=\frac{24}{4}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(a=6\,\text{m/s}^2\) to the right.</div></div>
+</div>
+<div class="note-box"><p>Correct order: find resultant force first, then apply \(F=ma\).</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Dynamics Mini Quiz">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Mini Quiz</span>
+        <h2 class="slide-title">Mini Quiz 2: Dynamics and Forces</h2>
+        
+<div class="card accent"><h3>Instructions</h3><p>Show a force diagram mentally or on paper before calculating.</p></div>
+<ol class="quiz-list">
+  <li>Two forces of 14 N and 9 N act to the right. Find the resultant.</li>
+  <li>Two forces of 40 N east and 25 N west act on a body. Find the resultant.</li>
+  <li>Forces of 12 N north and 5 N east act at right angle. Find the magnitude of the resultant.</li>
+  <li>A 10 kg body experiences a net force of 45 N. Find acceleration.</li>
+  <li>A 3 kg object is pulled by 20 N right and 8 N left. Find acceleration and direction.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Dynamics Mini Quiz Solutions">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Solutions</span>
+        <h2 class="slide-title">Mini Quiz 2: Solutions</h2>
+        
+<ol class="quiz-list solutions">
+  <li>Same direction: \(14+9=23\,\text{N}\) right.</li>
+  <li>Opposite directions: \(40-25=15\,\text{N east}\).</li>
+  <li>\(F_R=\sqrt{12^2+5^2}=\sqrt{169}=13\,\text{N}\).</li>
+  <li>\(a=\frac{45}{10}=4.5\,\text{m/s}^2\).</li>
+  <li>\(F_{\text{net}}=20-8=12\,\text{N}\) right. \(a=\frac{12}{3}=4\,\text{m/s}^2\) right.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Topic 2 - Electricity">
+      <div class="slide-inner">
+        <span class="slide-label">Topic 2 - Electricity</span>
+        <h2 class="slide-title">Electric Current and Voltage</h2>
+        
+<p class="slide-subtitle">Electricity questions usually ask you to track charge flow, voltage distribution, current distribution, resistance, energy, and power.</p>
+<div class="cards cols-2">
+  <div class="card accent"><h3>Current</h3><p>How much charge passes a point each second.</p></div>
+  <div class="card"><h3>Voltage</h3><p>Energy transferred per unit charge between two points.</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Electric Current">
+      <div class="slide-inner">
+        <span class="slide-label">Electricity - Idea 1</span>
+        <h2 class="slide-title">Electric Current</h2>
+        
+<div class="def-box"><div class="def-label">Definition</div><p>Electric current is the rate of flow of electric charge through a conductor.</p></div>
+<div class="formula-box"><div class="formula-label">Current formula</div>\[I=\frac{Q}{t}\]</div>
+<div class="cards cols-3">
+  <div class="card"><h3>\(I\)</h3><p>Current in amperes, A.</p></div>
+  <div class="card"><h3>\(Q\)</h3><p>Charge in coulombs, C.</p></div>
+  <div class="card accent"><h3>\(t\)</h3><p>Time in seconds, s.</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Current Direction and Circuit Requirement">
+      <div class="slide-inner">
+        <span class="slide-label">Electricity - Idea 1</span>
+        <h2 class="slide-title">Current Needs a Closed Circuit</h2>
+        
+<div class="cards cols-2">
+  <div class="card"><h3>Closed circuit</h3><p>There is a complete conducting path. Current can flow.</p></div>
+  <div class="card accent"><h3>Open circuit</h3><p>The path is broken. Current cannot flow.</p></div>
+</div>
+<div class="diagram-card">
+<svg viewBox="0 0 760 240">
+  <defs><marker id="currArrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#3d6b9e"/></marker></defs>
+  <rect x="160" y="80" width="420" height="110" rx="10" fill="none" stroke="#253461" stroke-width="5"/>
+  <line x1="160" y1="135" x2="110" y2="135" stroke="#253461" stroke-width="5"/>
+  <line x1="110" y1="110" x2="110" y2="160" stroke="#253461" stroke-width="5"/>
+  <line x1="95" y1="120" x2="95" y2="150" stroke="#253461" stroke-width="3"/>
+  <text x="72" y="95">cell</text>
+  <rect x="350" y="65" width="80" height="30" fill="#dde8f4" stroke="#253461" stroke-width="3"/>
+  <text x="350" y="55">lamp/resistor</text>
+  <line x1="235" y1="80" x2="310" y2="80" stroke="#3d6b9e" stroke-width="4" marker-end="url(#currArrow)"/>
+  <text x="260" y="60" fill="#3d6b9e">current</text>
+  <text x="250" y="220" fill="#555">A complete loop is needed for continuous current.</text>
+</svg>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Current">
+      <div class="slide-inner">
+        <span class="slide-label">Electricity - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Calculating Current</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A charge of \(90\,\text{C}\) passes through a wire in \(30\,\text{s}\). Find the current.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Known values</strong>\(Q=90\,\text{C}\), \(t=30\,\text{s}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Formula</strong>\(I=\frac{Q}{t}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Substitute</strong>\(I=\frac{90}{30}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(I=3\,\text{A}\).</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Voltage">
+      <div class="slide-inner">
+        <span class="slide-label">Electricity - Idea 2</span>
+        <h2 class="slide-title">Voltage</h2>
+        
+<div class="def-box"><div class="def-label">Definition</div><p>Voltage, or potential difference, is the energy transferred per unit charge between two points in a circuit.</p></div>
+<div class="formula-box"><div class="formula-label">Voltage formula</div>\[V=\frac{E}{Q}\]</div>
+<div class="cards cols-3">
+  <div class="card"><h3>\(V\)</h3><p>Voltage in volts, V.</p></div>
+  <div class="card"><h3>\(E\)</h3><p>Energy in joules, J.</p></div>
+  <div class="card accent"><h3>\(Q\)</h3><p>Charge in coulombs, C.</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Meaning of Voltage">
+      <div class="slide-inner">
+        <span class="slide-label">Electricity - Idea 2</span>
+        <h2 class="slide-title">What Voltage Means Physically</h2>
+        
+<p class="slide-subtitle">Voltage does not mean “amount of current.” Voltage is more like electrical push or energy per charge.</p>
+<div class="cards cols-2">
+  <div class="card accent"><h3>Battery/source</h3><p>A source provides energy to charges. A 9 V battery gives 9 J of energy to each coulomb of charge.</p></div>
+  <div class="card"><h3>Component/load</h3><p>A resistor, lamp, or motor uses electrical energy. Voltage across it measures energy used per coulomb.</p></div>
+</div>
+<div class="callout"><p><strong>Important distinction:</strong> Current is charge per second. Voltage is energy per charge.</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Voltage">
+      <div class="slide-inner">
+        <span class="slide-label">Electricity - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Calculating Voltage</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A component transfers \(240\,\text{J}\) of energy when \(20\,\text{C}\) of charge passes through it. Find the voltage across the component.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Known values</strong>\(E=240\,\text{J}\), \(Q=20\,\text{C}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Formula</strong>\(V=\frac{E}{Q}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Substitute</strong>\(V=\frac{240}{20}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(V=12\,\text{V}\).</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Laws of Current in Simple Circuits">
+      <div class="slide-inner">
+        <span class="slide-label">Electricity - Idea 3</span>
+        <h2 class="slide-title">Current in Series and Parallel Circuits</h2>
+        
+<div class="cards cols-2">
+  <div class="card accent"><h3>Series circuit</h3><p>There is only one path, so the same current passes through all components.</p><br/><p>\[I_1=I_2=I_3\]</p></div>
+  <div class="card"><h3>Parallel circuit</h3><p>Current splits between branches and recombines after them.</p><br/><p>\[I_{\text{total}}=I_1+I_2+\cdots\]</p></div>
+</div>
+<div class="diagram-card small-diagram">
+<svg viewBox="0 0 760 220">
+  <text x="120" y="30" font-weight="700" fill="#253461">Series</text>
+  <path d="M80 70 H350 V160 H80 Z" fill="none" stroke="#253461" stroke-width="4"/>
+  <rect x="155" y="56" width="45" height="28" fill="#dde8f4" stroke="#253461" stroke-width="2"/><rect x="240" y="56" width="45" height="28" fill="#dde8f4" stroke="#253461" stroke-width="2"/>
+  <text x="168" y="105">same current</text>
+  <text x="500" y="30" font-weight="700" fill="#253461">Parallel</text>
+  <path d="M430 110 H700" stroke="#253461" stroke-width="4" fill="none"/><path d="M500 110 V65 H630 V110" stroke="#253461" stroke-width="4" fill="none"/><path d="M500 110 V155 H630 V110" stroke="#253461" stroke-width="4" fill="none"/>
+  <rect x="550" y="52" width="45" height="26" fill="#dde8f4" stroke="#253461" stroke-width="2"/><rect x="550" y="142" width="45" height="26" fill="#dde8f4" stroke="#253461" stroke-width="2"/>
+  <text x="515" y="198">current splits</text>
+</svg>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Laws of Voltage in Simple Circuits">
+      <div class="slide-inner">
+        <span class="slide-label">Electricity - Idea 3</span>
+        <h2 class="slide-title">Voltage in Series and Parallel Circuits</h2>
+        
+<div class="cards cols-2">
+  <div class="card accent"><h3>Series circuit</h3><p>The source voltage is shared between components.</p><br/><p>\[V_{\text{source}}=V_1+V_2+\cdots\]</p></div>
+  <div class="card"><h3>Parallel circuit</h3><p>Each branch has the same voltage as the source.</p><br/><p>\[V_1=V_2=V_{\text{source}}\]</p></div>
+</div>
+<div class="callout"><p><strong>Memory trick:</strong> Series → current same, voltage divides. Parallel → voltage same, current divides.</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Circuit Laws">
+      <div class="slide-inner">
+        <span class="slide-label">Electricity - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Current and Voltage Laws</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>Two lamps are connected in series to a 12 V battery. The voltage across lamp 1 is 5 V. The current in lamp 1 is 0.4 A. Find the voltage across lamp 2 and the current in lamp 2.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Series voltage</strong>\(V_{\text{source}}=V_1+V_2\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Find missing voltage</strong>\(12=5+V_2\), so \(V_2=7\,\text{V}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Series current</strong>The current is the same everywhere in a series circuit.</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(V_2=7\,\text{V}\), \(I_2=0.4\,\text{A}\).</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Electricity Mini Quiz">
+      <div class="slide-inner">
+        <span class="slide-label">Electricity - Mini Quiz</span>
+        <h2 class="slide-title">Mini Quiz 3: Current and Voltage</h2>
+        
+<div class="card accent"><h3>Instructions</h3><p>Focus on definitions and circuit laws before calculating.</p></div>
+<ol class="quiz-list">
+  <li>A charge of 150 C passes in 50 s. Find current.</li>
+  <li>A device uses 600 J when 50 C passes through it. Find voltage.</li>
+  <li>Three resistors are in series. If the current through the first is 0.2 A, what is the current through the third?</li>
+  <li>Two components are in series across 18 V. One has 7 V across it. Find the voltage across the other.</li>
+  <li>Two branches are in parallel across a 9 V battery. What voltage is across each branch?</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Electricity Mini Quiz Solutions">
+      <div class="slide-inner">
+        <span class="slide-label">Electricity - Solutions</span>
+        <h2 class="slide-title">Mini Quiz 3: Solutions</h2>
+        
+<ol class="quiz-list solutions">
+  <li>\(I=\frac{Q}{t}=\frac{150}{50}=3\,\text{A}\).</li>
+  <li>\(V=\frac{E}{Q}=\frac{600}{50}=12\,\text{V}\).</li>
+  <li>Same current in series: \(0.2\,\text{A}\).</li>
+  <li>\(18-7=11\,\text{V}\).</li>
+  <li>Parallel voltage is the same as source: \(9\,\text{V}\) across each branch.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Resistance Topic">
+      <div class="slide-inner">
+        <span class="slide-label">Topic 2 - Electricity</span>
+        <h2 class="slide-title">Resistance and Ohm’s Law</h2>
+        
+<p class="slide-subtitle">Resistance tells how strongly a component opposes electric current. It links voltage and current through Ohm’s law.</p>
+<div class="cards cols-2">
+  <div class="card accent"><h3>Concept</h3><p>Greater resistance makes current smaller for the same voltage.</p></div>
+  <div class="card"><h3>Main formula</h3><p>\(V=IR\)</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Electrical Resistance">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Idea 1</span>
+        <h2 class="slide-title">Electrical Resistance</h2>
+        
+<div class="def-box"><div class="def-label">Definition</div><p>Electrical resistance is the opposition that a material or component offers to the flow of electric current.</p></div>
+<div class="formula-box"><div class="formula-label">Resistance unit</div>\[R \text{ is measured in ohms } (\Omega)\]</div>
+<div class="cards cols-2">
+  <div class="card"><h3>Low resistance</h3><p>Current can flow more easily.</p></div>
+  <div class="card accent"><h3>High resistance</h3><p>Current flow is more difficult.</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Resistance Intuition">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Idea 1</span>
+        <h2 class="slide-title">How Resistance Affects Current</h2>
+        
+<p class="slide-subtitle">Think of current like water flow and resistance like a narrow pipe. A narrower path makes flow harder.</p>
+<div class="diagram-card small-diagram">
+<svg viewBox="0 0 760 210">
+  <defs><marker id="flowArrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#3d6b9e"/></marker></defs>
+  <text x="90" y="40" font-weight="700" fill="#253461">Low resistance</text>
+  <rect x="80" y="85" width="260" height="55" rx="25" fill="#dde8f4" stroke="#253461" stroke-width="3"/>
+  <line x1="110" y1="112" x2="300" y2="112" stroke="#3d6b9e" stroke-width="6" marker-end="url(#flowArrow)"/>
+  <text x="130" y="170">larger current</text>
+  <text x="475" y="40" font-weight="700" fill="#253461">High resistance</text>
+  <rect x="440" y="95" width="260" height="35" rx="18" fill="#dde8f4" stroke="#253461" stroke-width="3"/>
+  <line x1="470" y1="112" x2="615" y2="112" stroke="#3d6b9e" stroke-width="4" marker-end="url(#flowArrow)"/>
+  <text x="490" y="170">smaller current</text>
+</svg>
+</div>
+<div class="callout"><p>This analogy is useful, but not perfect. In calculations, use Ohm’s law.</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Ohm’s Law">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Idea 2</span>
+        <h2 class="slide-title">Ohm’s Law</h2>
+        
+<div class="def-box"><div class="def-label">Law</div><p>For an ohmic resistor at constant temperature, the voltage across it is directly proportional to the current through it.</p></div>
+<div class="formula-box"><div class="formula-label">Ohm’s law</div>\[V=IR\]</div>
+<div class="cards cols-3">
+  <div class="card"><h3>Find voltage</h3><p>\(V=IR\)</p></div>
+  <div class="card"><h3>Find current</h3><p>\(I=\frac{V}{R}\)</p></div>
+  <div class="card accent"><h3>Find resistance</h3><p>\(R=\frac{V}{I}\)</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Ohmic Resistor Graph">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Idea 2</span>
+        <h2 class="slide-title">Voltage-Current Graph for an Ohmic Resistor</h2>
+        
+<p class="slide-subtitle">For an ohmic resistor, the graph of voltage against current is a straight line through the origin.</p>
+<div class="diagram-card">
+<svg viewBox="0 0 760 260">
+  <defs><marker id="ohmAxis" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#253461"/></marker></defs>
+  <line x1="120" y1="210" x2="660" y2="210" stroke="#253461" stroke-width="3" marker-end="url(#ohmAxis)"/>
+  <line x1="120" y1="210" x2="120" y2="35" stroke="#253461" stroke-width="3" marker-end="url(#ohmAxis)"/>
+  <text x="650" y="238">current \(I\)</text><text x="55" y="45">voltage \(V\)</text>
+  <line x1="120" y1="210" x2="610" y2="60" stroke="#3d6b9e" stroke-width="5"/>
+  <text x="390" y="95" fill="#3d6b9e" font-weight="700">slope = resistance</text>
+</svg>
+</div>
+<div class="note-box"><p>A steeper line means larger resistance because more voltage is needed for the same current.</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Ohm’s Law">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Ohm’s Law</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A \(6\,\Omega\) resistor is connected to a \(12\,\text{V}\) supply. Find the current.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Known values</strong>\(R=6\,\Omega\), \(V=12\,\text{V}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Rearrange</strong>\(I=\frac{V}{R}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Substitute</strong>\(I=\frac{12}{6}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(I=2\,\text{A}\).</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Resistors in Series">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Idea 3</span>
+        <h2 class="slide-title">Grouping Resistors in Series</h2>
+        
+<div class="def-box"><div class="def-label">Series connection</div><p>Resistors are in series when they are connected one after another in a single path.</p></div>
+<div class="formula-box"><div class="formula-label">Equivalent resistance in series</div>\[R_{\text{eq}}=R_1+R_2+R_3+\cdots\]</div>
+<div class="diagram-card small-diagram">
+<svg viewBox="0 0 760 180">
+  <path d="M80 90 H190" stroke="#253461" stroke-width="4"/><rect x="190" y="70" width="80" height="40" fill="#dde8f4" stroke="#253461" stroke-width="3"/><path d="M270 90 H360" stroke="#253461" stroke-width="4"/><rect x="360" y="70" width="80" height="40" fill="#dde8f4" stroke="#253461" stroke-width="3"/><path d="M440 90 H560" stroke="#253461" stroke-width="4"/><rect x="560" y="70" width="80" height="40" fill="#dde8f4" stroke="#253461" stroke-width="3"/><path d="M640 90 H700" stroke="#253461" stroke-width="4"/>
+  <text x="215" y="98">\(R_1\)</text><text x="385" y="98">\(R_2\)</text><text x="585" y="98">\(R_3\)</text>
+  <text x="250" y="150" fill="#555">One path → same current through all resistors.</text>
+</svg>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Series Resistors">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Series Resistors</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>Three resistors \(4\,\Omega\), \(7\,\Omega\), and \(9\,\Omega\) are connected in series to a \(40\,\text{V}\) source. Find the equivalent resistance and total current.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Series resistance</strong>\(R_{\text{eq}}=4+7+9=20\,\Omega\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Use Ohm’s law</strong>\(I=\frac{V}{R_{\text{eq}}}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Substitute</strong>\(I=\frac{40}{20}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(R_{\text{eq}}=20\,\Omega\), \(I=2\,\text{A}\).</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Resistors in Parallel">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Idea 4</span>
+        <h2 class="slide-title">Grouping Resistors in Parallel</h2>
+        
+<div class="def-box"><div class="def-label">Parallel connection</div><p>Resistors are in parallel when their ends are connected to the same two points, giving multiple paths for current.</p></div>
+<div class="formula-box"><div class="formula-label">Equivalent resistance in parallel</div>\[\frac{1}{R_{\text{eq}}}=\frac{1}{R_1}+\frac{1}{R_2}+\frac{1}{R_3}+\cdots\]</div>
+<div class="diagram-card small-diagram">
+<svg viewBox="0 0 760 210">
+  <path d="M100 105 H250" stroke="#253461" stroke-width="4"/><path d="M250 105 V55 H560 V105" stroke="#253461" stroke-width="4" fill="none"/><path d="M250 105 V155 H560 V105" stroke="#253461" stroke-width="4" fill="none"/><path d="M560 105 H700" stroke="#253461" stroke-width="4"/>
+  <rect x="375" y="42" width="70" height="26" fill="#dde8f4" stroke="#253461" stroke-width="3"/><rect x="375" y="142" width="70" height="26" fill="#dde8f4" stroke="#253461" stroke-width="3"/>
+  <text x="395" y="62">\(R_1\)</text><text x="395" y="162">\(R_2\)</text><text x="280" y="195" fill="#555">Multiple paths → same voltage across each branch.</text>
+</svg>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Parallel Resistors">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Parallel Resistors</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>Two resistors \(6\,\Omega\) and \(3\,\Omega\) are connected in parallel. Find the equivalent resistance.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Formula</strong>\(\frac{1}{R_{\text{eq}}}=\frac{1}{6}+\frac{1}{3}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Common denominator</strong>\(\frac{1}{6}+\frac{2}{6}=\frac{3}{6}=\frac{1}{2}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Invert</strong>\(\frac{1}{R_{\text{eq}}}=\frac{1}{2}\), so \(R_{\text{eq}}=2\,\Omega\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Check</strong>Parallel resistance is less than the smallest branch resistor. \(2\Omega&lt;3\Omega\), so it makes sense.</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Mixed Resistor Circuits">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Idea 5</span>
+        <h2 class="slide-title">Mixed Series-Parallel Circuits</h2>
+        
+<p class="slide-subtitle">A mixed circuit contains both series and parallel parts. Solve it by simplifying one part at a time.</p>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Identify groups</strong>Find resistors clearly in series or clearly in parallel.</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Simplify one group</strong>Replace that group by its equivalent resistance.</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Repeat</strong>Continue until one total resistance remains.</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Apply Ohm’s law</strong>Use \(V=IR\) for total values or individual branches.</div></div>
+</div>
+<div class="callout"><p><strong>Warning:</strong> Do not add all resistors directly unless they are all in series.</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Mixed Circuit">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Mixed Resistor Circuit</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A \(4\,\Omega\) resistor is in series with a parallel combination of \(6\,\Omega\) and \(3\,\Omega\). The circuit is connected to \(18\,\text{V}\). Find total resistance and total current.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Parallel part</strong>\(\frac{1}{R_p}=\frac{1}{6}+\frac{1}{3}=\frac{1}{2}\), so \(R_p=2\,\Omega\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Series total</strong>\(R_{\text{eq}}=4+2=6\,\Omega\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Total current</strong>\(I=\frac{V}{R}=\frac{18}{6}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(R_{\text{eq}}=6\,\Omega\), \(I=3\,\text{A}\).</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Resistance Mini Quiz">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Mini Quiz</span>
+        <h2 class="slide-title">Mini Quiz 4: Resistance and Resistor Grouping</h2>
+        
+<div class="card accent"><h3>Instructions</h3><p>Decide first: series, parallel, or mixed?</p></div>
+<ol class="quiz-list">
+  <li>A resistor has \(10\,\text{V}\) across it and \(2\,\text{A}\) through it. Find \(R\).</li>
+  <li>A \(12\,\Omega\) resistor is connected to \(6\,\text{V}\). Find current.</li>
+  <li>Find equivalent resistance of \(5\,\Omega\), \(8\,\Omega\), and \(2\,\Omega\) in series.</li>
+  <li>Find equivalent resistance of \(4\,\Omega\) and \(12\,\Omega\) in parallel.</li>
+  <li>A \(2\,\Omega\) resistor is in series with two parallel resistors \(6\,\Omega\) and \(3\,\Omega\). Find total resistance.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Resistance Mini Quiz Solutions">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Solutions</span>
+        <h2 class="slide-title">Mini Quiz 4: Solutions</h2>
+        
+<ol class="quiz-list solutions">
+  <li>\(R=\frac{V}{I}=\frac{10}{2}=5\,\Omega\).</li>
+  <li>\(I=\frac{V}{R}=\frac{6}{12}=0.5\,\text{A}\).</li>
+  <li>Series: \(R_{\text{eq}}=5+8+2=15\,\Omega\).</li>
+  <li>\(\frac{1}{R}=\frac{1}{4}+\frac{1}{12}=\frac{4}{12}=\frac{1}{3}\), so \(R=3\,\Omega\).</li>
+  <li>Parallel part: \(6\parallel3=2\,\Omega\). Total: \(2+2=4\,\Omega\).</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Energy and Power Topic">
+      <div class="slide-inner">
+        <span class="slide-label">Topic 2 - Electricity</span>
+        <h2 class="slide-title">Electrical Energy and Power</h2>
+        
+<p class="slide-subtitle">Power tells how fast electrical energy is transferred. Energy tells the total amount transferred over time.</p>
+<div class="cards cols-2">
+  <div class="card accent"><h3>Power</h3><p>Rate of energy transfer.</p></div>
+  <div class="card"><h3>Energy</h3><p>Total transferred energy.</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Electrical Power">
+      <div class="slide-inner">
+        <span class="slide-label">Energy and Power - Idea 1</span>
+        <h2 class="slide-title">Electrical Power</h2>
+        
+<div class="def-box"><div class="def-label">Definition</div><p>Electrical power is the rate at which electrical energy is transferred or converted by a device.</p></div>
+<div class="formula-box"><div class="formula-label">Power formula</div>\[P=VI\]</div>
+<div class="cards cols-3">
+  <div class="card"><h3>\(P\)</h3><p>Power in watts, W.</p></div>
+  <div class="card"><h3>\(V\)</h3><p>Voltage in volts, V.</p></div>
+  <div class="card accent"><h3>\(I\)</h3><p>Current in amperes, A.</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Other Power Formulas">
+      <div class="slide-inner">
+        <span class="slide-label">Energy and Power - Idea 1</span>
+        <h2 class="slide-title">Power Formulas Using Resistance</h2>
+        
+<p class="slide-subtitle">By combining \(P=VI\) with Ohm’s law \(V=IR\), we get two other useful formulas.</p>
+<div class="cards cols-2">
+  <div class="formula-box"><div class="formula-label">Using current and resistance</div>\[P=I^2R\]</div>
+  <div class="formula-box"><div class="formula-label">Using voltage and resistance</div>\[P=\frac{V^2}{R}\]</div>
+</div>
+<div class="callout"><p><strong>Use the formula that matches the given data.</strong> If the question gives \(V\) and \(I\), use \(P=VI\). If it gives \(I\) and \(R\), use \(P=I^2R\).</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Electrical Power">
+      <div class="slide-inner">
+        <span class="slide-label">Energy and Power - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Calculating Power</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A lamp has \(12\,\text{V}\) across it and carries a current of \(0.5\,\text{A}\). Find its power.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Known values</strong>\(V=12\,\text{V}\), \(I=0.5\,\text{A}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Formula</strong>\(P=VI\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Substitute</strong>\(P=12\times0.5\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(P=6\,\text{W}\).</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Electrical Energy">
+      <div class="slide-inner">
+        <span class="slide-label">Energy and Power - Idea 2</span>
+        <h2 class="slide-title">Electrical Energy</h2>
+        
+<div class="def-box"><div class="def-label">Definition</div><p>Electrical energy is the total energy transferred by an electrical device during a time interval.</p></div>
+<div class="formula-box"><div class="formula-label">Energy formula</div>\[E=Pt\]</div>
+<div class="cards cols-3">
+  <div class="card"><h3>\(E\)</h3><p>Energy in joules, J.</p></div>
+  <div class="card"><h3>\(P\)</h3><p>Power in watts, W.</p></div>
+  <div class="card accent"><h3>\(t\)</h3><p>Time in seconds, s.</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Energy Formula Variations">
+      <div class="slide-inner">
+        <span class="slide-label">Energy and Power - Idea 2</span>
+        <h2 class="slide-title">Energy Formula Variations</h2>
+        
+<p class="slide-subtitle">Since \(P=VI\), electrical energy can also be written using voltage and current.</p>
+<div class="cards cols-2">
+  <div class="formula-box"><div class="formula-label">Using power</div>\[E=Pt\]</div>
+  <div class="formula-box"><div class="formula-label">Using voltage and current</div>\[E=VIt\]</div>
+</div>
+<div class="note-box"><p>If \(P\) is in watts and \(t\) is in seconds, energy is in joules. If power is in kilowatts and time is in hours, energy is in kilowatt-hours.</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Electrical Energy">
+      <div class="slide-inner">
+        <span class="slide-label">Energy and Power - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Calculating Electrical Energy</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A \(60\,\text{W}\) lamp operates for \(5\,\text{min}\). Find the electrical energy used in joules.</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Convert time</strong>\(5\,\text{min}=300\,\text{s}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Formula</strong>\(E=Pt\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Substitute</strong>\(E=60\times300\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(E=18{,}000\,\text{J}\).</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Power vs Energy">
+      <div class="slide-inner">
+        <span class="slide-label">Energy and Power - Idea 3</span>
+        <h2 class="slide-title">Power vs Energy: Do Not Mix Them Up</h2>
+        
+<div class="cards cols-2">
+  <div class="card accent"><h3>Power</h3><p>How fast energy is transferred.</p><br/><p>Unit: watt \((\text{W})\)</p><p>Formula: \(P=\frac{E}{t}\)</p></div>
+  <div class="card"><h3>Energy</h3><p>Total amount transferred.</p><br/><p>Unit: joule \((\text{J})\)</p><p>Formula: \(E=Pt\)</p></div>
+</div>
+<div class="callout"><p>A high-power device does not always use more energy. It depends on how long it operates.</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Worked Example - Comparing Devices">
+      <div class="slide-inner">
+        <span class="slide-label">Energy and Power - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Which Device Uses More Energy?</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>Device A has power \(100\,\text{W}\) and runs for \(20\,\text{s}\). Device B has power \(40\,\text{W}\) and runs for \(90\,\text{s}\). Which uses more energy?</p></div>
+<div class="step-grid">
+  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Device A</strong>\(E_A=Pt=100\times20=2000\,\text{J}\).</div></div>
+  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Device B</strong>\(E_B=40\times90=3600\,\text{J}\).</div></div>
+  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Compare</strong>\(3600\,\text{J} > 2000\,\text{J}\).</div></div>
+  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Conclusion</strong>Device B uses more energy, even though its power is lower.</div></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Energy and Power Mini Quiz">
+      <div class="slide-inner">
+        <span class="slide-label">Energy and Power - Mini Quiz</span>
+        <h2 class="slide-title">Mini Quiz 5: Electrical Energy and Power</h2>
+        
+<div class="card accent"><h3>Instructions</h3><p>Choose the formula based on the quantities given.</p></div>
+<ol class="quiz-list">
+  <li>A device has \(9\,\text{V}\) across it and \(2\,\text{A}\) through it. Find power.</li>
+  <li>A \(5\,\Omega\) resistor carries \(3\,\text{A}\). Find power.</li>
+  <li>A \(30\,\text{W}\) device works for \(4\,\text{min}\). Find energy in joules.</li>
+  <li>A device uses \(7200\,\text{J}\) in \(60\,\text{s}\). Find power.</li>
+  <li>A \(12\,\text{V}\) motor draws \(0.5\,\text{A}\) for \(100\,\text{s}\). Find energy used.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Energy and Power Mini Quiz Solutions">
+      <div class="slide-inner">
+        <span class="slide-label">Energy and Power - Solutions</span>
+        <h2 class="slide-title">Mini Quiz 5: Solutions</h2>
+        
+<ol class="quiz-list solutions">
+  <li>\(P=VI=9\times2=18\,\text{W}\).</li>
+  <li>\(P=I^2R=3^2\times5=45\,\text{W}\).</li>
+  <li>\(4\,\text{min}=240\,\text{s}\). \(E=Pt=30\times240=7200\,\text{J}\).</li>
+  <li>\(P=\frac{E}{t}=\frac{7200}{60}=120\,\text{W}\).</li>
+  <li>\(E=VIt=12\times0.5\times100=600\,\text{J}\).</li>
+</ol>
+
+      </div>
+    </section>
+
+
+    <section class="slide" data-title="Scalar vs Vector Quantities">
+      <div class="slide-inner">
+        <span class="slide-label">Foundation</span>
+        <h2 class="slide-title">Scalar vs Vector Quantities</h2>
+        <p class="slide-subtitle">Many mistakes in mechanics come from treating vector quantities as if they were scalars.</p>
+        <div class="cards cols-2">
+          <div class="card accent"><h3>Scalar</h3><p>Has magnitude only.</p><br/><p>Examples: distance, speed, time, mass, energy, power.</p></div>
+          <div class="card"><h3>Vector</h3><p>Has magnitude and direction.</p><br/><p>Examples: displacement, velocity, acceleration, force.</p></div>
+        </div>
+        <div class="callout"><p><strong>Exam rule:</strong> If direction matters, draw an arrow and use signs such as positive/negative, east/west, or up/down.</p></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Kinematics Problem-Solving Map">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Strategy</span>
+        <h2 class="slide-title">How to Choose the Correct Kinematics Formula</h2>
+        <div class="step-grid">
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Path length?</strong>If the question gives total path traveled, think distance and average speed.</div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Change in position?</strong>If start and finish positions matter, think displacement and average velocity.</div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Change in velocity?</strong>If velocity changes with time, use acceleration.</div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Graph?</strong>If it is an x-t graph, velocity is the slope.</div></div>
+        </div>
+        <div class="note-box"><p>Before calculating, write the target quantity: distance, displacement, speed, velocity, or acceleration.</p></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Piecewise x-t Graphs">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Graphs</span>
+        <h2 class="slide-title">Piecewise Displacement-Time Graphs</h2>
+        <p class="slide-subtitle">A graph can have different sections. Each straight section has its own velocity.</p>
+        <div class="diagram-card">
+          <svg viewBox="0 0 760 260">
+            <defs><marker id="axisPiece" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#253461"/></marker></defs>
+            <line x1="90" y1="210" x2="700" y2="210" stroke="#253461" stroke-width="3" marker-end="url(#axisPiece)"/>
+            <line x1="90" y1="210" x2="90" y2="35" stroke="#253461" stroke-width="3" marker-end="url(#axisPiece)"/>
+            <text x="690" y="238">time</text><text x="35" y="45">x</text>
+            <polyline points="110,180 280,90 450,90 640,160" fill="none" stroke="#3d6b9e" stroke-width="5"/>
+            <circle cx="110" cy="180" r="5" fill="#253461"/><circle cx="280" cy="90" r="5" fill="#253461"/><circle cx="450" cy="90" r="5" fill="#253461"/><circle cx="640" cy="160" r="5" fill="#253461"/>
+            <text x="150" y="115" fill="#3d6b9e">positive velocity</text><text x="320" y="78" fill="#555">rest</text><text x="500" y="125" fill="#5a4200">negative velocity</text>
+          </svg>
+        </div>
+        <div class="callout"><p>For each part, calculate slope separately. Do not use the whole graph unless the question asks for average velocity over the whole interval.</p></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Worked Example - Piecewise Graph">
+      <div class="slide-inner">
+        <span class="slide-label">Kinematics - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Piecewise x-t Graph</h2>
+        <div class="card accent"><h3>Problem</h3><p>An object moves from \(x=0\,\text{m}\) at \(t=0\,\text{s}\) to \(x=12\,\text{m}\) at \(t=4\,\text{s}\), then remains at \(12\,\text{m}\) until \(t=7\,\text{s}\). Find the velocity in each section.</p></div>
+        <div class="step-grid">
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>First section</strong>\(v=\frac{12-0}{4-0}=3\,\text{m/s}\).</div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Second section</strong>Position does not change, so slope is zero.</div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Answer</strong>From 0 to 4 s: \(3\,\text{m/s}\). From 4 to 7 s: \(0\,\text{m/s}\).</div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Meaning</strong>The object moves first, then stops.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Scale Drawings for Forces">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Graphical Method</span>
+        <h2 class="slide-title">Adding Forces Graphically Using a Scale</h2>
+        <p class="slide-subtitle">A graphical solution uses a scale such as \(1\,\text{cm}=5\,\text{N}\). Arrows are drawn head-to-tail.</p>
+        <div class="cards cols-3">
+          <div class="card"><h3>Choose scale</h3><p>Pick a scale that fits on the page.</p></div>
+          <div class="card accent"><h3>Draw head-to-tail</h3><p>Place the tail of the second vector at the head of the first.</p></div>
+          <div class="card"><h3>Measure resultant</h3><p>The resultant goes from the first tail to the final head.</p></div>
+        </div>
+        <div class="note-box"><p>The analytical method is more accurate, but the graphical method helps you understand direction.</p></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Worked Example - Find Force from Acceleration">
+      <div class="slide-inner">
+        <span class="slide-label">Dynamics - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Finding Force from Acceleration</h2>
+        <div class="card accent"><h3>Problem</h3><p>A \(7\,\text{kg}\) object accelerates at \(2.5\,\text{m/s}^2\). Find the net force.</p></div>
+        <div class="step-grid">
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Known values</strong>\(m=7\,\text{kg}\), \(a=2.5\,\text{m/s}^2\).</div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Formula</strong>\(F_{\text{net}}=ma\).</div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Substitute</strong>\(F=7\times2.5\).</div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>\(F=17.5\,\text{N}\).</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Measuring Current and Voltage">
+      <div class="slide-inner">
+        <span class="slide-label">Electricity - Measurement</span>
+        <h2 class="slide-title">How Current and Voltage Are Measured</h2>
+        <div class="cards cols-2">
+          <div class="card accent"><h3>Ammeter</h3><p>Measures current. It is connected in series because it must count the charge passing through the component.</p></div>
+          <div class="card"><h3>Voltmeter</h3><p>Measures voltage. It is connected in parallel because it compares energy per charge between two points.</p></div>
+        </div>
+        <div class="callout"><p>This reinforces the definitions: current is flow through a component; voltage is difference across a component.</p></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Series vs Parallel Strategy Table">
+      <div class="slide-inner">
+        <span class="slide-label">Electricity - Strategy</span>
+        <h2 class="slide-title">Series vs Parallel: Strategy Table</h2>
+        <div class="cards cols-2">
+          <div class="card accent"><h3>Series</h3><ul class="bullet-list"><li>One path.</li><li>Same current everywhere.</li><li>Voltages add.</li><li>Resistances add directly.</li></ul></div>
+          <div class="card"><h3>Parallel</h3><ul class="bullet-list"><li>Multiple paths.</li><li>Same voltage across branches.</li><li>Currents add.</li><li>Use reciprocal formula for resistance.</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Worked Example - Branch Current">
+      <div class="slide-inner">
+        <span class="slide-label">Resistance - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Current in Parallel Branches</h2>
+        <div class="card accent"><h3>Problem</h3><p>Two resistors, \(6\,\Omega\) and \(12\,\Omega\), are connected in parallel across a \(24\,\text{V}\) source. Find the current in each branch and the total current.</p></div>
+        <div class="step-grid">
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Parallel voltage</strong>Each branch has \(24\,\text{V}\).</div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Branch 1</strong>\(I_1=\frac{24}{6}=4\,\text{A}\).</div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Branch 2</strong>\(I_2=\frac{24}{12}=2\,\text{A}\).</div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Total</strong>\(I_{\text{total}}=4+2=6\,\text{A}\).</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Energy Units: J and kWh">
+      <div class="slide-inner">
+        <span class="slide-label">Energy and Power - Units</span>
+        <h2 class="slide-title">Energy Units: Joules and Kilowatt-Hours</h2>
+        <div class="cards cols-2">
+          <div class="card accent"><h3>Joule</h3><p>Used in physics calculations when power is in watts and time is in seconds.</p><br/><p>\(E=Pt\)</p></div>
+          <div class="card"><h3>Kilowatt-hour</h3><p>Used for electricity bills when power is in kilowatts and time is in hours.</p><br/><p>\(1\,\text{kWh}=3.6\times10^6\,\text{J}\)</p></div>
+        </div>
+        <div class="callout"><p>Do not mix watts with hours if the answer is required in joules. Convert time to seconds first.</p></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Worked Example - Circuit Power">
+      <div class="slide-inner">
+        <span class="slide-label">Energy and Power - Worked Example</span>
+        <h2 class="slide-title">Worked Example: Power in a Resistor</h2>
+        <div class="card accent"><h3>Problem</h3><p>A \(10\,\Omega\) resistor is connected to a \(20\,\text{V}\) source. Find the current and power dissipated.</p></div>
+        <div class="step-grid">
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Current</strong>\(I=\frac{V}{R}=\frac{20}{10}=2\,\text{A}\).</div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Power method 1</strong>\(P=VI=20\times2=40\,\text{W}\).</div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Power method 2</strong>\(P=\frac{V^2}{R}=\frac{20^2}{10}=40\,\text{W}\).</div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Answer</strong>Current \(=2\,\text{A}\), power \(=40\,\text{W}\).</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="Pre-Test Checklist">
+      <div class="slide-inner">
+        <span class="slide-label">Exam Strategy</span>
+        <h2 class="slide-title">Pre-Test Checklist</h2>
+        <div class="cards cols-3">
+          <div class="card"><h3>Before solving</h3><p>Circle what is given and underline what is required.</p></div>
+          <div class="card accent"><h3>During solving</h3><p>Write the formula before substituting numbers.</p></div>
+          <div class="card"><h3>After solving</h3><p>Check unit, direction, and whether the answer is physically reasonable.</p></div>
+        </div>
+        <div class="note-box"><p>Most lost marks come from using the right idea with the wrong unit, wrong direction, or wrong circuit rule.</p></div>
+      </div>
+    </section>
+
+    <section class="slide " data-title="Formula Summary - Mechanics">
+      <div class="slide-inner">
+        <span class="slide-label">Summary</span>
+        <h2 class="slide-title">Formula Summary: Mechanics</h2>
+        
+<div class="summary-grid">
+  <div class="summary-card"><h4>Distance and speed</h4><ul><li>\(v=\frac{d}{t}\)</li><li>\(d=vt\)</li><li>\(t=\frac{d}{v}\)</li></ul></div>
+  <div class="summary-card"><h4>Displacement and velocity</h4><ul><li>\(\vec v=\frac{\Delta x}{\Delta t}\)</li><li>Slope of x-t graph = velocity</li></ul></div>
+  <div class="summary-card"><h4>Acceleration</h4><ul><li>\(a=\frac{v_f-v_i}{t}\)</li><li>\(v_f=v_i+at\)</li></ul></div>
+  <div class="summary-card"><h4>Forces</h4><ul><li>Same line: add/subtract</li><li>Right angle: \(F_R=\sqrt{F_1^2+F_2^2}\)</li></ul></div>
+  <div class="summary-card"><h4>Newton’s law</h4><ul><li>\(\sum F=ma\)</li><li>\(a=\frac{\sum F}{m}\)</li></ul></div>
+  <div class="summary-card"><h4>Units</h4><ul><li>m, s, m/s, m/s²</li><li>N = kg·m/s²</li></ul></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Formula Summary - Electricity">
+      <div class="slide-inner">
+        <span class="slide-label">Summary</span>
+        <h2 class="slide-title">Formula Summary: Electricity</h2>
+        
+<div class="summary-grid">
+  <div class="summary-card"><h4>Current</h4><ul><li>\(I=\frac{Q}{t}\)</li><li>Unit: ampere, A</li></ul></div>
+  <div class="summary-card"><h4>Voltage</h4><ul><li>\(V=\frac{E}{Q}\)</li><li>Unit: volt, V</li></ul></div>
+  <div class="summary-card"><h4>Resistance</h4><ul><li>\(V=IR\)</li><li>Unit: ohm, \(\Omega\)</li></ul></div>
+  <div class="summary-card"><h4>Grouping</h4><ul><li>Series: \(R=R_1+R_2+\cdots\)</li><li>Parallel: \(\frac{1}{R}=\frac{1}{R_1}+\frac{1}{R_2}+\cdots\)</li></ul></div>
+  <div class="summary-card"><h4>Power</h4><ul><li>\(P=VI\)</li><li>\(P=I^2R\)</li><li>\(P=\frac{V^2}{R}\)</li></ul></div>
+  <div class="summary-card"><h4>Energy</h4><ul><li>\(E=Pt\)</li><li>\(E=VIt\)</li></ul></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Common Mistakes">
+      <div class="slide-inner">
+        <span class="slide-label">Exam Strategy</span>
+        <h2 class="slide-title">Common Mistakes to Avoid</h2>
+        
+<div class="cards cols-2">
+  <div class="card accent"><h3>Mechanics mistakes</h3><ul class="bullet-list"><li>Confusing distance with displacement.</li><li>Confusing speed with velocity.</li><li>Using one force instead of net force.</li><li>Forgetting direction when adding vectors.</li></ul></div>
+  <div class="card"><h3>Electricity mistakes</h3><ul class="bullet-list"><li>Thinking current and voltage are the same.</li><li>Using series rules for parallel circuits.</li><li>Adding parallel resistors directly.</li><li>Using minutes or hours without converting when energy must be in joules.</li></ul></div>
+</div>
+<div class="note-box"><p><strong>Final check:</strong> Does your answer have the correct unit and a reasonable size?</p></div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Final Test Instructions">
+      <div class="slide-inner">
+        <span class="slide-label">Final Test</span>
+        <h2 class="slide-title">Final Test</h2>
+        
+<div class="card accent"><h3>Instructions</h3><p>Answer the five full questions. Each question has multiple parts. Show steps, formulas, substitutions, and units.</p></div>
+<div class="cards cols-2">
+  <div class="card"><h3>Suggested time</h3><p>45–60 minutes.</p></div>
+  <div class="card"><h3>Allowed tools</h3><p>Calculator, formula summary, ruler for graph/vector diagrams.</p></div>
+</div>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Final Test - Question 1">
+      <div class="slide-inner">
+        <span class="slide-label">Final Test</span>
+        <h2 class="slide-title">Question 1: Kinematics</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A student walks 60 m east in 30 s, then 25 m west in 10 s.</p></div>
+<ol class="quiz-list">
+  <li>Find the total distance traveled.</li>
+  <li>Find the displacement, including direction.</li>
+  <li>Find the average speed for the whole trip.</li>
+  <li>Find the average velocity for the whole trip.</li>
+  <li>Explain why the answers to parts 3 and 4 are different.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Final Test - Question 2">
+      <div class="slide-inner">
+        <span class="slide-label">Final Test</span>
+        <h2 class="slide-title">Question 2: Acceleration and Graph Interpretation</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>An object moves in a straight line. Its velocity changes from \(5\,\text{m/s}\) to \(23\,\text{m/s}\) in \(6\,\text{s}\).</p></div>
+<ol class="quiz-list">
+  <li>Find the acceleration.</li>
+  <li>Find the final velocity if the same acceleration continues for another \(4\,\text{s}\).</li>
+  <li>A displacement-time graph has a slope of \(-4\,\text{m/s}\). What does the negative sign mean?</li>
+  <li>Between two graph points, \((2\,\text{s},18\,\text{m})\) and \((8\,\text{s},-6\,\text{m})\), find velocity.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Final Test - Question 3">
+      <div class="slide-inner">
+        <span class="slide-label">Final Test</span>
+        <h2 class="slide-title">Question 3: Forces and Newton’s Second Law</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A \(5\,\text{kg}\) cart is acted on by three horizontal forces: \(30\,\text{N}\) right, \(12\,\text{N}\) left, and \(8\,\text{N}\) right.</p></div>
+<ol class="quiz-list">
+  <li>Represent the forces with arrows.</li>
+  <li>Find the net horizontal force.</li>
+  <li>Find the acceleration of the cart.</li>
+  <li>A second force of \(24\,\text{N}\) north acts together with a \(7\,\text{N}\) east force. Find the resultant magnitude.</li>
+  <li>Find the direction angle of this resultant measured north of east.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Final Test - Question 4">
+      <div class="slide-inner">
+        <span class="slide-label">Final Test</span>
+        <h2 class="slide-title">Question 4: Current, Voltage, and Resistance</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A circuit has a \(12\,\text{V}\) source connected to a \(3\,\Omega\) resistor in series with a parallel combination of \(6\,\Omega\) and \(6\,\Omega\).</p></div>
+<ol class="quiz-list">
+  <li>Find the equivalent resistance of the parallel part.</li>
+  <li>Find the total equivalent resistance.</li>
+  <li>Find the total current supplied by the source.</li>
+  <li>Find the voltage across the \(3\,\Omega\) series resistor.</li>
+  <li>Find the voltage across the parallel branch.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Final Test - Question 5">
+      <div class="slide-inner">
+        <span class="slide-label">Final Test</span>
+        <h2 class="slide-title">Question 5: Electrical Energy and Power</h2>
+        
+<div class="card accent"><h3>Problem</h3><p>A small motor operates at \(9\,\text{V}\) and draws \(0.8\,\text{A}\). It runs for \(5\,\text{min}\).</p></div>
+<ol class="quiz-list">
+  <li>Find the electrical power of the motor.</li>
+  <li>Find the electrical energy used in joules.</li>
+  <li>If the motor resistance is modeled as ohmic, find its resistance.</li>
+  <li>Another device uses \(3000\,\text{J}\) in \(200\,\text{s}\). Which device has greater power?</li>
+  <li>Explain the difference between power and energy using this example.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Final Test Solutions - Q1">
+      <div class="slide-inner">
+        <span class="slide-label">Final Test Solutions</span>
+        <h2 class="slide-title">Solution: Question 1</h2>
+        
+<ol class="quiz-list solutions">
+  <li>Distance \(=60+25=85\,\text{m}\).</li>
+  <li>Displacement \(=60-25=35\,\text{m east}\).</li>
+  <li>Total time \(=30+10=40\,\text{s}\). Average speed \(=\frac{85}{40}=2.125\,\text{m/s}\).</li>
+  <li>Average velocity \(=\frac{35}{40}=0.875\,\text{m/s east}\).</li>
+  <li>Speed uses total distance; velocity uses displacement. Backtracking increases distance but reduces displacement.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Final Test Solutions - Q2">
+      <div class="slide-inner">
+        <span class="slide-label">Final Test Solutions</span>
+        <h2 class="slide-title">Solution: Question 2</h2>
+        
+<ol class="quiz-list solutions">
+  <li>\(a=\frac{23-5}{6}=3\,\text{m/s}^2\).</li>
+  <li>After another \(4\,\text{s}\): \(v_f=23+(3)(4)=35\,\text{m/s}\).</li>
+  <li>Negative slope means velocity is negative: the object moves in the negative direction.</li>
+  <li>\(v=\frac{-6-18}{8-2}=\frac{-24}{6}=-4\,\text{m/s}\).</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Final Test Solutions - Q3">
+      <div class="slide-inner">
+        <span class="slide-label">Final Test Solutions</span>
+        <h2 class="slide-title">Solution: Question 3</h2>
+        
+<ol class="quiz-list solutions">
+  <li>Draw two arrows right labeled 30 N and 8 N, and one arrow left labeled 12 N.</li>
+  <li>Net force \(=30+8-12=26\,\text{N right}\).</li>
+  <li>\(a=\frac{F}{m}=\frac{26}{5}=5.2\,\text{m/s}^2\) right.</li>
+  <li>For perpendicular forces: \(F_R=\sqrt{24^2+7^2}=\sqrt{625}=25\,\text{N}\).</li>
+  <li>Measured north of east: \(\tan\theta=\frac{24}{7}\), so \(\theta\approx73.7^\circ\) north of east.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Final Test Solutions - Q4">
+      <div class="slide-inner">
+        <span class="slide-label">Final Test Solutions</span>
+        <h2 class="slide-title">Solution: Question 4</h2>
+        
+<ol class="quiz-list solutions">
+  <li>Parallel part: \(\frac{1}{R_p}=\frac{1}{6}+\frac{1}{6}=\frac{2}{6}=\frac{1}{3}\), so \(R_p=3\,\Omega\).</li>
+  <li>Total resistance: \(R_{\text{eq}}=3+3=6\,\Omega\).</li>
+  <li>Total current: \(I=\frac{12}{6}=2\,\text{A}\).</li>
+  <li>Voltage across series \(3\,\Omega\): \(V=IR=2\times3=6\,\text{V}\).</li>
+  <li>Remaining voltage across parallel branch: \(12-6=6\,\text{V}\).</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Final Test Solutions - Q5">
+      <div class="slide-inner">
+        <span class="slide-label">Final Test Solutions</span>
+        <h2 class="slide-title">Solution: Question 5</h2>
+        
+<ol class="quiz-list solutions">
+  <li>\(P=VI=9\times0.8=7.2\,\text{W}\).</li>
+  <li>\(5\,\text{min}=300\,\text{s}\). \(E=Pt=7.2\times300=2160\,\text{J}\).</li>
+  <li>\(R=\frac{V}{I}=\frac{9}{0.8}=11.25\,\Omega\).</li>
+  <li>Other device: \(P=\frac{3000}{200}=15\,\text{W}\), so the other device has greater power.</li>
+  <li>Power is how quickly energy is used; energy is the total used over time. The motor has lower power but still uses energy because it runs for several minutes.</li>
+</ol>
+
+      </div>
+    </section>
+
+    <section class="slide " data-title="Closing Checklist">
+      <div class="slide-inner">
+        <span class="slide-label">Final Review</span>
+        <h2 class="slide-title">What You Should Be Able To Do Now</h2>
+        
+<div class="summary-grid">
+  <div class="summary-card"><h4>Kinematics</h4><ul><li>Separate distance from displacement</li><li>Separate speed from velocity</li><li>Use acceleration formulas</li><li>Read x-t graph slopes</li></ul></div>
+  <div class="summary-card"><h4>Dynamics</h4><ul><li>Draw force arrows</li><li>Add same-line and right-angle forces</li><li>Use \(F=ma\)</li></ul></div>
+  <div class="summary-card"><h4>Electricity</h4><ul><li>Use \(I=Q/t\)</li><li>Use \(V=E/Q\)</li><li>Apply series/parallel current and voltage laws</li></ul></div>
+  <div class="summary-card"><h4>Resistance</h4><ul><li>Use Ohm’s law</li><li>Combine series resistors</li><li>Combine parallel resistors</li><li>Solve mixed circuits</li></ul></div>
+  <div class="summary-card"><h4>Energy and power</h4><ul><li>Calculate \(P\)</li><li>Calculate \(E\)</li><li>Explain the difference between them</li></ul></div>
+  <div class="summary-card"><h4>Exam habit</h4><ul><li>Write data</li><li>Choose formula</li><li>Substitute</li><li>Include units and direction</li></ul></div>
+</div>
+
+      </div>
+    </section>
+
+  </div>
+  <div id="nav-bar">
+    <button class="nav-btn" onclick="jumpToTitle('Interactive Dashboard')">Dashboard</button>
+    <button class="nav-btn" id="btn-prev" onclick="navigate(-1)">← Previous</button>
+    <div id="slide-title-bar"></div>
+    <div id="slide-counter"></div>
+    <button class="nav-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
+  </div>
+</div>
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let current = 0;
+  function showSlide(index) {
+    if (index < 0 || index >= total) return;
+    slides[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+    document.getElementById('slide-counter').textContent = (current + 1) + ' / ' + total;
+    document.getElementById('slide-title-bar').textContent = slides[current].dataset.title || '';
+    document.getElementById('btn-prev').disabled = current === 0;
+    document.getElementById('btn-next').disabled = current === total - 1;
+    const pct = total > 1 ? (current / (total - 1)) * 100 : 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetPromise([slides[current]]).catch(function(){});
+    }
+  }
+  function navigate(dir) { showSlide(current + dir); }
+  function jumpToTitle(title) {
+    const idx = slides.findIndex(function(slide) { return slide.dataset.title === title; });
+    if (idx >= 0) showSlide(idx);
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate(-1);
+  });
+  showSlide(0);
+</script>
+</body>
+</html>
